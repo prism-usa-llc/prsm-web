@@ -22,6 +22,9 @@ func gabfOutline(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Fprintf(w, "Failed to read body from %s", gabfURL)
 	}
+
+	fmt.Println("made http call to %s", gabfURL)
+
 	pattern := `https://.*.pdf`
 	re, err := regexp.Compile(pattern)
 	if err != nil {
@@ -30,6 +33,7 @@ func gabfOutline(w http.ResponseWriter, r *http.Request) {
 	matches := re.FindStringSubmatch(string(body))
 	if len(matches) > 0 {
 		http.Redirect(w, r, matches[0], http.StatusMovedPermanently)
+		return
 	}
 
 	fmt.Fprintf(w, "could not find pdf file from %s", gabfURL)

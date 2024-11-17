@@ -8,6 +8,7 @@ import (
 	"regexp"
 )
 
+// gabfOutline fetches the GABF live page, finds the pdf link, and redirects the user to the source
 func gabfOutline(w http.ResponseWriter, r *http.Request) {
 	// fetch the page
 	gabfURL := "https://graceambassadors.com/live"
@@ -35,12 +36,7 @@ func gabfOutline(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, matches[0], http.StatusMovedPermanently)
 		return
 	}
-
 	fmt.Fprintf(w, "could not find pdf file from %s", gabfURL)
-
-	// fmt.Println(string(body))
-	// fmt.Println("Matches: ", matches)
-	// fmt.Fprintf(w, "WIP")
 
 }
 

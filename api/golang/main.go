@@ -32,7 +32,9 @@ func gabfOutline(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	matches := re.FindStringSubmatch(string(body))
+	w.Header().Set("Cache-Control", "no-cache")
 	if len(matches) > 0 {
+
 		http.Redirect(w, r, matches[0], http.StatusMovedPermanently)
 		return
 	}

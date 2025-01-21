@@ -8,7 +8,7 @@ app = FastAPI()
 class URL_Test(BaseModel):
     endpoint: str
     threshold: int = Field(min=1, max=10)
-    email: str = Field(regex= r'^[^\s@]+@[^\s@]+\.[^\s@]+$')
+    email: str #= Field(regex= r'^[^\s@]+@[^\s@]+\.[^\s@]+$')
     phone_number: str
 
 @app.post("/scout")

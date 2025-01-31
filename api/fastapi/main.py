@@ -1,9 +1,19 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from pydantic import BaseModel, Field
 import asyncio
+from fastapi.staticfiles import StaticFiles
 
 
 app = FastAPI()
+
+# Serve static files from the 'static' directory
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Define a route for the favicon
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return FileResponse("static/favicon.ico")
+                        
 
 class URL_Test(BaseModel):
     endpoint: str
@@ -21,9 +31,12 @@ def root():
     return {"message": "this is root"}
 
 
-@app.get("/utils/delay/{seconds}")
-async def delayed_response(seconds):
-    print("this is seconds: ", seconds)
+@app.get("/utils/delay")
+async def delayed_response(seconds: str = Query(...),
+                           description="use 10 seconds or less"):
+    '''
+    Waits $seconds to respond
+    '''
     try:
         seconds = int(seconds)
     except Exception as e:

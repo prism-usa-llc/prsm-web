@@ -1,11 +1,16 @@
 from fastapi import FastAPI, Query, Cookie, Response, Request
 from fastapi.responses import JSONResponse
+from fastapi_versioning import VersionedFastAPI, version
 from pydantic import BaseModel, Field
 import asyncio
 from fastapi.staticfiles import StaticFiles
 from session import session_layer
 
-app = FastAPI()
+app = FastAPI(
+    debug=True,
+    description="prsmusa.com backend",
+    contact="raymondmintz11@gmail.com,github.com/r4wm",
+)
 
 # Serve static files from the 'static' directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -22,6 +27,7 @@ class URL_Test(BaseModel):
     email: str #= Field(regex= r'^[^\s@]+@[^\s@]+\.[^\s@]+$')
     phone_number: str
 
+#TODO finish this.. 
 @app.post("/scout")
 def create_url_test(url: URL_Test):
     return url
@@ -49,6 +55,7 @@ async def delayed_response(seconds: str = Query(...),
     return {"message": f"waited {seconds} seconds"}
 
 @app.get("/get_session")
+@version(0,1)
 async def get_session(response: Response):
     # make and set cookie
     from datetime import datetime, timedelta

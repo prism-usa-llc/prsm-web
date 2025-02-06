@@ -1,15 +1,16 @@
-from fastapi import FastAPI, Query, Cookie, Response, Request
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, Query, Cookie, Response, Request, HTTPException
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi_versioning import VersionedFastAPI, version
 from pydantic import BaseModel, Field
 import asyncio
 from fastapi.staticfiles import StaticFiles
 from session import session_layer
+import hashlib
 
 app = FastAPI(
     debug=True,
     description="prsmusa.com backend",
-    contact="raymondmintz11@gmail.com,github.com/r4wm",
+    #contact="raymondmintz11@gmail.com"
 )
 
 # Serve static files from the 'static' directory
@@ -74,10 +75,45 @@ async def get_session(response: Response):
     # return session_layer.get_user_session()
 
 @app.get("/see_cookie")
+@version(0,1)
 async def see_cookie(request: Request):
     '''
     Just print out the users cookie, for testing purposes
     '''
     return request.cookies.get('prsm_session')
     
+# app = VersionedFastAPI(app)
 
+#TODO make these fields checked with pydantic stuff regex
+class User(BaseModel):
+    username: str
+    email: str
+    password: str
+
+# Temporary in-memory storage for users
+users_db = []
+
+@app.post("/signup")
+def signup(user: User):
+    '''
+    curl -X 'POST'   'http://localhost:8000/signup'   -H 'accept: application/json'   -H 'Content-Type: application/json'   -d '{
+  "username": "raymondmintz",
+  "email": "raymondmintz11@gmail.com",
+  "password": "mycoolpassword"
+}'
+    '''
+    # Check if user already exists
+    if any(u['username'] == user.username or u['email'] == user.email for u in users_db):
+        raise HTTPException(status_code=400, detail="User already exists")
+    
+    # Hash the password (simple hashing for demo purposes)
+    hashed_password = hashlib.sha256(user.password.encode('utf-8')).hexdigest()
+
+    # Store user with hashed password
+    users_db.append({
+        'username': user.username,
+        'email': user.email,
+        'password': hashed_password
+    })
+
+    return {"message": "User created successfully"}

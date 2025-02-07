@@ -99,30 +99,45 @@ users_db = []
 @app.post("/signup")
 def signup(user: User):
     '''
-    curl -X 'POST'   'http://localhost:8000/signup'   -H 'accept: application/json'   -H 'Content-Type: application/json'   -d '{
-  "username": "raymondmintz",
-  "email": "raymondmintz11@gmail.com",
-  "password": "mycoolpassword"
-}'
+    takes information from user, stores user temp until user is verified
     '''
-    # Check if user already exists
-    if any(u['username'] == user.username or u['email'] == user.email or u['phone'] == user.phone for u in users_db):
-        raise HTTPException(status_code=400, detail="User already exists")
-    
+    '''
+    for reference
+    sqlite> .schema
+    CREATE TABLE users (
+        id INTEGER PRIMARY KEY,
+        business_name TEXT,
+        fname TEXT,
+        lname TEXT,
+        email TEXT,
+        phone TEXT
+    );
+    '''
     # connect to sqlite3 
     # TODO check for sqlite3 on startup 
-
     # check if the phonenumber already exists
     conn = sqlite3.connect('./sqlite3/customers.db')
     cursor = conn.cursor()
-    print("this is user.phone: ", user.phone)
     cursor.execute("select exists(select phone from users where phone=? limit 1)" , (user.phone,))
     exists = cursor.fetchone()[0]
     if exists:
-        return {"error": "phone number already exists"}
+        raise HTTPException(status_code=400, detail="phone number already exists")        
+
+    breakpoint()
     
-    # insert into temp space with redis and set a timeout 
-    '''if the user registers in given time, take whats in redis and add to the database permenant'''
+    # insert into temp space with redis and set a timeout
+    import redis
+    import json
+    # get user cookie
+    # store the 6 digit random number into user object for later
+    # stuff user object into redis with a 10 minute TTL
+    # done, now we need to have a popup which will POST the 6 digit number into verify endpoint and compare , if success, save payload from redis into database
+    
+    r = redis.Redis(host='localhost', port=6379, db=0)
+    redis_key = f'{user.phone}::'
+    r.set()
+    
+    # NOTE: if the user registers in given time, take whats in redis and add to the database permenant
     #TODO REMOVE THIS AFTER TESTING
     # inserting into database for now.. 
     cursor.execute('''INSERT INTO users (email, phone) VALUES(?, ?)''', (user.email, user.phone))

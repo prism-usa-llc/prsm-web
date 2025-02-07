@@ -6,6 +6,8 @@ import asyncio
 from fastapi.staticfiles import StaticFiles
 from session import session_layer
 import hashlib
+import sqlite3
+
 
 app = FastAPI(
     debug=True,
@@ -89,6 +91,7 @@ class User(BaseModel):
     username: str
     email: str
     password: str
+    phone: str
 
 # Temporary in-memory storage for users
 users_db = []
@@ -103,9 +106,29 @@ def signup(user: User):
 }'
     '''
     # Check if user already exists
-    if any(u['username'] == user.username or u['email'] == user.email for u in users_db):
+    if any(u['username'] == user.username or u['email'] == user.email or u['phone'] == user.phone for u in users_db):
         raise HTTPException(status_code=400, detail="User already exists")
     
+    # connect to sqlite3 
+    # TODO check for sqlite3 on startup 
+
+    # check if the phonenumber already exists
+    conn = sqlite3.connect('./sqlite3/customers.db')
+    cursor = conn.cursor()
+    print("this is user.phone: ", user.phone)
+    cursor.execute("select exists(select phone from users where phone=? limit 1)" , (user.phone,))
+    exists = cursor.fetchone()[0]
+    if exists:
+        return {"error": "phone number already exists"}
+    
+    # insert into temp space with redis and set a timeout 
+    '''if the user registers in given time, take whats in redis and add to the database permenant'''
+    #TODO REMOVE THIS AFTER TESTING
+    # inserting into database for now.. 
+    cursor.execute('''INSERT INTO users (email, phone) VALUES(?, ?)''', (user.email, user.phone))
+    conn.commit()
+
+
     # Hash the password (simple hashing for demo purposes)
     hashed_password = hashlib.sha256(user.password.encode('utf-8')).hexdigest()
 
@@ -113,7 +136,8 @@ def signup(user: User):
     users_db.append({
         'username': user.username,
         'email': user.email,
-        'password': hashed_password
+        'password': hashed_password,
+        'phone': user.phone,
     })
 
     return {"message": "User created successfully"}

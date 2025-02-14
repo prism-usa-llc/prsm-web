@@ -7,6 +7,8 @@ from fastapi.staticfiles import StaticFiles
 from session import session_layer
 import hashlib
 import sqlite3
+import redis
+import json
 
 
 app = FastAPI(
@@ -123,11 +125,9 @@ def signup(user: User):
     if exists:
         raise HTTPException(status_code=400, detail="phone number already exists")        
 
-    breakpoint()
     
     # insert into temp space with redis and set a timeout
-    import redis
-    import json
+    
     # get user cookie
     # store the 6 digit random number into user object for later
     # stuff user object into redis with a 10 minute TTL

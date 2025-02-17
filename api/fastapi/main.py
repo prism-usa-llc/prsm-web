@@ -126,20 +126,6 @@ def signup(user: User, request: Request):
         raise HTTPException(status_code=400, detail="phone number already exists")        
 
     
-    # insert into temp space with redis and set a timeout
-    
-    # get user cookie
-    # breakpoint()
-    # cookie = request.cookies.get('prsm_session')
-    # if not cookie:
-    #     print("no cookie")
-    #     return
-    # print("this is cookie: ", cookie)
-    
-    # store the 6 digit random number into user object for later
-    # stuff user object into redis with a 10 minute TTL
-    # done, now we need to have a popup which will POST the 6 digit number into verify endpoint and compare , if success, save payload from redis into database
-
     from datetime import datetime, timedelta
     expiry = datetime.now() + timedelta(days=1)
     cookie_value = session_layer.get_random_session_string()
@@ -155,28 +141,15 @@ def signup(user: User, request: Request):
     r = redis.Redis(host='localhost', port=6379, db=0)
     redis_key = f'{user.phone}::{cookie_value}'
     print("redis-cli set {redis-key}")
-    r.set(redis_key, 123456)
+    import random
+    random_number = random.randint(100000, 999999)
+    r.set(redis_key, random_number)
 
 
     response.text = f"a 6 digit auth has been sent to {user.phone}"
+
+    # TODO
+    # send the 6 digit to the phone number
+    
     return response
     
-    # # NOTE: if the user registers in given time, take whats in redis and add to the database permenant
-    # #TODO REMOVE THIS AFTER TESTING
-    # # inserting into database for now.. 
-    # cursor.execute('''INSERT INTO users (email, phone) VALUES(?, ?)''', (user.email, user.phone))
-    # conn.commit()
-
-
-    # # Hash the password (simple hashing for demo purposes)
-    # hashed_password = hashlib.sha256(user.password.encode('utf-8')).hexdigest()
-
-    # # Store user with hashed password
-    # users_db.append({
-    #     'username': user.username,
-    #     'email': user.email,
-    #     'password': hashed_password,
-    #     'phone': user.phone,
-    # })
-
-    # return {"message": "User created successfully"}

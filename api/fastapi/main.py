@@ -145,11 +145,9 @@ def signup(user: User, request: Request):
     random_number = random.randint(100000, 999999)
     r.set(redis_key, random_number)
 
-
+    response.headers['content-type'] = "application/json"
+    response._content = b'{"key": "value"}'
     response.text = f"a 6 digit auth has been sent to {user.phone}"
-
-    # TODO
-    # send the 6 digit to the phone number
     
     return response
     

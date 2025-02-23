@@ -144,10 +144,38 @@ def signup(user: User, request: Request):
     import random
     random_number = random.randint(100000, 999999)
     r.set(redis_key, random_number)
+    # set the TTL to 10 minutes
+    r.expire(redis_key, 3000)
+    res = r.ttl(redis_key)
+    print(f'redis key is set to {res}')
 
     response.headers['content-type'] = "application/json"
     response._content = b'{"key": "value"}'
     response.text = f"a 6 digit auth has been sent to {user.phone}"
+
+    # send out the alert
+    # def send_alerts(self, alert_message: str):
+    #     TOKEN=os.environ['CLICKSEND_TOKEN']
+    #     cell_phone = "+1" + self.cell_phone
+    #     URL='https://rest.clicksend.com/v3/sms/send'
+    #     HEADERS={
+    #         "Authorization": f"Basic {TOKEN}",
+    #         "Content-Type": "Application/json"
+    #     }
+
+    #     print("this is headers: ", HEADERS)
+    #     payload={
+    #         "messages": [
+    #             {
+    #                 "source": "php",
+    #                 "body": f"{alert_message}",
+    #                 "to": cell_phone,
+    #             }
+    #         ]
+    #     }
+
+    #     req_handler = requests.post(URL, json=payload, headers=HEADERS)
+    #     print(req_handler.text)
     
     return response
     

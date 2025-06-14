@@ -9,6 +9,8 @@ PROJECT_ROOT="/home/rmintz/github/prsm-web"
 FE_DIR="$PROJECT_ROOT/fe"
 API_DIR="$PROJECT_ROOT/api/fastapi"
 NGINX_CONFIG="$PROJECT_ROOT/nginx/nginx.conf"
+NGINX_SITE_CONFIG="$PROJECT_ROOT/fe/etc/nginx/sites-enabled/prsmusa.nginx.conf"
+PRODUCTION_WEB_DIR="/var/www/prsmusa"
 
 # Colors for output
 RED='\033[0;31m'
@@ -197,6 +199,75 @@ show_logs() {
     fi
 }
 
+# Function to deploy to production
+deploy_production() {
+    print_status "Deploying PRSM USA to production..."
+    
+    # Check if running as root or with sudo access
+    if [ "$EUID" -ne 0 ]; then
+        print_error "Production deployment requires sudo access"
+        print_status "Please run: sudo ./deploy.sh deploy"
+        exit 1
+    fi
+    
+    # Stop backend if running
+    stop_backend
+    
+    # Create production web directory
+    print_status "Creating production web directory..."
+    mkdir -p "$PRODUCTION_WEB_DIR"
+    
+    # Copy frontend files to production location
+    print_status "Copying frontend files to $PRODUCTION_WEB_DIR..."
+    cp -r "$FE_DIR"/* "$PRODUCTION_WEB_DIR/"
+    
+    # Set proper ownership and permissions
+    print_status "Setting proper ownership and permissions..."
+    chown -R www-data:www-data "$PRODUCTION_WEB_DIR"
+    chmod -R 755 "$PRODUCTION_WEB_DIR"
+    
+    # Copy nginx site config to sites-available
+    print_status "Configuring nginx..."
+    if [ -f "$NGINX_SITE_CONFIG" ]; then
+        # Update the nginx config to use production path
+        sed 's|/home/rmintz/github/prsm-web/fe|/var/www/prsmusa|g' "$NGINX_SITE_CONFIG" > /etc/nginx/sites-available/prsmusa
+        
+        # Create symlink in sites-enabled
+        ln -sf /etc/nginx/sites-available/prsmusa /etc/nginx/sites-enabled/prsmusa
+        
+        # Remove default nginx site if it exists
+        if [ -f /etc/nginx/sites-enabled/default ]; then
+            rm /etc/nginx/sites-enabled/default
+            print_status "Removed default nginx site"
+        fi
+        
+        print_status "Nginx site configuration updated"
+    else
+        print_error "Nginx site configuration not found at $NGINX_SITE_CONFIG"
+        exit 1
+    fi
+    
+    # Test nginx configuration
+    print_status "Testing nginx configuration..."
+    if nginx -t; then
+        print_status "Nginx configuration is valid"
+    else
+        print_error "Nginx configuration test failed"
+        exit 1
+    fi
+    
+    # Reload nginx
+    print_status "Reloading nginx..."
+    systemctl reload nginx
+    
+    # Start backend in production mode
+    print_status "Starting backend in production mode..."
+    start_backend
+    
+    print_status "Production deployment complete!"
+    print_status "Your site should now be accessible at https://prsmusa.com"
+}
+
 # Main script logic
 case "$1" in
 "setup")
@@ -222,9 +293,12 @@ case "$1" in
 "logs")
     show_logs
     ;;
+"deploy")
+    deploy_production
+    ;;
 *)
     echo "PRSM USA Management Script"
-    echo "Usage: $0 {setup|start|stop|restart|status|test|logs}"
+    echo "Usage: $0 {setup|start|stop|restart|status|test|logs|deploy}"
     echo ""
     echo "Commands:"
     echo "  setup   - Set up the development environment"
@@ -234,6 +308,7 @@ case "$1" in
     echo "  status  - Check system status"
     echo "  test    - Test API endpoints"
     echo "  logs    - Show FastAPI logs"
+    echo "  deploy  - Deploy to production"
     exit 1
     ;;
 esac

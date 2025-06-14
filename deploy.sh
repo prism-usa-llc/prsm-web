@@ -247,18 +247,26 @@ deploy_production() {
     chown -R www-data:www-data "$PRODUCTION_WEB_DIR"
     chmod -R 755 "$PRODUCTION_WEB_DIR"
 
-    # Copy nginx site config to sites-available
-    print_status "Configuring nginx..."
-    if [ -f "$NGINX_SITE_CONFIG" ]; then
-        # Update the nginx config to use production path
-        sed 's|/home/rmintz/github/prsm-web/fe|/var/www/prsmusa|g' "$NGINX_SITE_CONFIG" >/etc/nginx/sites-available/prsmusa
+    # Copy nginx configuration files
+    print_status "Copying nginx configuration files..."
+    if [ -d "$FE_DIR/etc/nginx" ]; then
+        # Copy the entire nginx configuration structure
+        cp -r "$FE_DIR/etc/nginx"/* /etc/nginx/
 
-        # Create symlink in sites-enabled
-        ln -sf /etc/nginx/sites-available/prsmusa /etc/nginx/sites-enabled/prsmusa
+        # Update the site config to use production path
+        if [ -f "/etc/nginx/sites-enabled/prsmusa.nginx.conf" ]; then
+            sed -i 's|/home/rmintz/github/prsm-web/fe|/var/www/prsmusa|g' /etc/nginx/sites-enabled/prsmusa.nginx.conf
+            print_status "Updated nginx site configuration for production"
+        fi
 
-        print_status "Nginx site configuration updated"
+        # Also update sites-available if it exists
+        if [ -f "/etc/nginx/sites-available/prsmusa.nginx.conf" ]; then
+            sed -i 's|/home/rmintz/github/prsm-web/fe|/var/www/prsmusa|g' /etc/nginx/sites-available/prsmusa.nginx.conf
+        fi
+
+        print_status "Nginx configuration files copied and updated"
     else
-        print_error "Nginx site configuration not found at $NGINX_SITE_CONFIG"
+        print_error "Nginx configuration directory not found at $FE_DIR/etc/nginx"
         exit 1
     fi
 

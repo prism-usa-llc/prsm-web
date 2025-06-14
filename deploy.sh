@@ -33,8 +33,8 @@ print_error() {
 check_service() {
     local service_name=$1
     local port=$2
-    
-    if lsof -i :$port > /dev/null 2>&1; then
+
+    if lsof -i :$port >/dev/null 2>&1; then
         print_status "$service_name is running on port $port"
         return 0
     else
@@ -46,25 +46,25 @@ check_service() {
 # Function to start FastAPI backend
 start_backend() {
     print_status "Starting FastAPI backend..."
-    
+
     if check_service "FastAPI" 8002; then
         print_warning "FastAPI is already running"
         return 0
     fi
-    
+
     cd "$API_DIR"
-    
+
     # Check if virtual environment exists
     if [ ! -d "venv" ]; then
         print_error "Virtual environment not found. Please run 'setup' first."
         exit 1
     fi
-    
+
     # Start FastAPI in background
     source venv/bin/activate
-    nohup uvicorn main:app --host 0.0.0.0 --port 8002 > /tmp/fastapi.log 2>&1 &
-    echo $! > /tmp/fastapi.pid
-    
+    nohup uvicorn main:app --host 127.0.0.1 --port 8002 >/tmp/fastapi.log 2>&1 &
+    echo $! >/tmp/fastapi.pid
+
     # Wait a moment and check if it started
     sleep 2
     if check_service "FastAPI" 8002; then
@@ -78,10 +78,10 @@ start_backend() {
 # Function to stop FastAPI backend
 stop_backend() {
     print_status "Stopping FastAPI backend..."
-    
+
     if [ -f /tmp/fastapi.pid ]; then
         local pid=$(cat /tmp/fastapi.pid)
-        if kill -0 $pid > /dev/null 2>&1; then
+        if kill -0 $pid >/dev/null 2>&1; then
             kill $pid
             rm /tmp/fastapi.pid
             print_status "FastAPI backend stopped"
@@ -104,45 +104,45 @@ stop_backend() {
 # Function to setup the environment
 setup_environment() {
     print_status "Setting up PRSM USA environment..."
-    
+
     # Create virtual environment if it doesn't exist
     if [ ! -d "$API_DIR/venv" ]; then
         print_status "Creating virtual environment..."
         cd "$API_DIR"
         python3 -m venv venv
     fi
-    
+
     # Install dependencies
     print_status "Installing Python dependencies..."
     cd "$API_DIR"
     source venv/bin/activate
     pip install --upgrade pip
     pip install -r requirements.txt
-    
+
     # Set permissions for frontend
     print_status "Setting frontend permissions..."
     chmod -R 755 "$FE_DIR"
-    
+
     print_status "Environment setup complete!"
 }
 
 # Function to check system status
 check_status() {
     print_status "Checking PRSM USA system status..."
-    
+
     echo "Frontend files:"
     ls -la "$FE_DIR" | head -10
-    
+
     echo -e "\nBackend status:"
     check_service "FastAPI" 8002
-    
+
     echo -e "\nNginx configuration:"
     if [ -f "$NGINX_CONFIG" ]; then
         print_status "Nginx config found at $NGINX_CONFIG"
     else
         print_error "Nginx config not found"
     fi
-    
+
     echo -e "\nPython virtual environment:"
     if [ -d "$API_DIR/venv" ]; then
         print_status "Virtual environment exists"
@@ -159,12 +159,12 @@ check_status() {
 # Function to test the API
 test_api() {
     print_status "Testing API endpoints..."
-    
+
     if ! check_service "FastAPI" 8002; then
         print_error "FastAPI is not running. Please start it first."
         exit 1
     fi
-    
+
     # Test root endpoint
     echo "Testing root endpoint..."
     response=$(curl -s http://localhost:8002/)
@@ -173,13 +173,13 @@ test_api() {
     else
         print_error "Root endpoint: FAILED"
     fi
-    
+
     # Test contact endpoint
     echo "Testing contact endpoint..."
     response=$(curl -s -X POST http://localhost:8002/contact \
         -H "Content-Type: application/json" \
         -d '{"name":"Test","email":"test@test.com","service":"test","message":"Test message"}')
-    
+
     if echo "$response" | grep -q "success"; then
         print_status "Contact endpoint: OK"
     else
@@ -199,41 +199,41 @@ show_logs() {
 
 # Main script logic
 case "$1" in
-    "setup")
-        setup_environment
-        ;;
-    "start")
-        start_backend
-        ;;
-    "stop")
-        stop_backend
-        ;;
-    "restart")
-        stop_backend
-        sleep 2
-        start_backend
-        ;;
-    "status")
-        check_status
-        ;;
-    "test")
-        test_api
-        ;;
-    "logs")
-        show_logs
-        ;;
-    *)
-        echo "PRSM USA Management Script"
-        echo "Usage: $0 {setup|start|stop|restart|status|test|logs}"
-        echo ""
-        echo "Commands:"
-        echo "  setup   - Set up the development environment"
-        echo "  start   - Start the FastAPI backend"
-        echo "  stop    - Stop the FastAPI backend"
-        echo "  restart - Restart the FastAPI backend"
-        echo "  status  - Check system status"
-        echo "  test    - Test API endpoints"
-        echo "  logs    - Show FastAPI logs"
-        exit 1
-        ;;
+"setup")
+    setup_environment
+    ;;
+"start")
+    start_backend
+    ;;
+"stop")
+    stop_backend
+    ;;
+"restart")
+    stop_backend
+    sleep 2
+    start_backend
+    ;;
+"status")
+    check_status
+    ;;
+"test")
+    test_api
+    ;;
+"logs")
+    show_logs
+    ;;
+*)
+    echo "PRSM USA Management Script"
+    echo "Usage: $0 {setup|start|stop|restart|status|test|logs}"
+    echo ""
+    echo "Commands:"
+    echo "  setup   - Set up the development environment"
+    echo "  start   - Start the FastAPI backend"
+    echo "  stop    - Stop the FastAPI backend"
+    echo "  restart - Restart the FastAPI backend"
+    echo "  status  - Check system status"
+    echo "  test    - Test API endpoints"
+    echo "  logs    - Show FastAPI logs"
+    exit 1
+    ;;
 esac

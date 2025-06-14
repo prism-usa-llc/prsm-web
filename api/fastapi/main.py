@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Query, Cookie, Response, Request, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi_versioning import VersionedFastAPI, version
 from pydantic import BaseModel, Field
 import asyncio
@@ -17,6 +18,15 @@ app = FastAPI(
     #contact="raymondmintz11@gmail.com"
 )
 
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://prsmusa.com", "http://localhost:3000", "http://127.0.0.1:8000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Serve static files from the 'static' directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -32,11 +42,49 @@ class URL_Test(BaseModel):
     email: str #= Field(regex= r'^[^\s@]+@[^\s@]+\.[^\s@]+$')
     phone_number: str
 
+class ContactForm(BaseModel):
+    name: str
+    email: str
+    phone: str = ""
+    service: str
+    message: str
+
 #TODO finish this.. 
 @app.post("/scout")
 def create_url_test(url: URL_Test):
     return url
 
+@app.post("/contact")
+async def contact_form(contact: ContactForm):
+    """
+    Handle contact form submissions from the frontend
+    """
+    try:
+        # Log the contact form submission
+        print(f"Contact form submission: {contact.name} - {contact.email} - {contact.service}")
+        
+        # Here you could:
+        # 1. Save to database
+        # 2. Send email notification
+        # 3. Send SMS notification
+        # 4. Add to CRM system
+        
+        # For now, just return success response
+        return {
+            "status": "success",
+            "message": "Thank you for your message! We'll get back to you soon.",
+            "data": {
+                "name": contact.name,
+                "service": contact.service
+            }
+        }
+        
+    except Exception as e:
+        print(f"Error processing contact form: {e}")
+        raise HTTPException(
+            status_code=500, 
+            detail="Sorry, there was an error processing your request. Please try again."
+        )
 
 @app.get("/")
 def root():
@@ -178,4 +226,4 @@ def signup(user: User, request: Request):
     #     print(req_handler.text)
     
     return response
-    
+

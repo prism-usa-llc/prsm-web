@@ -1,5 +1,7 @@
 #!/bin/bash
 
-cd ~/github/prsm-web/utils
-source ~/virt3-fastapi/bin/activate
-echo "started virtual environment for fastapi"
+cd /home/rmintz/github/prsm-web/api/fastapi
+source ./venv/bin/activate
+echo "Activating virtual environment for FastAPI..."
+echo "Starting FastAPI server on port 8002..."
+uvicorn main:app --host 0.0.0.0 --port 8002 --reload

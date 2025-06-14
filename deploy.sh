@@ -64,6 +64,14 @@ start_backend() {
 
     # Start FastAPI in background
     source venv/bin/activate
+
+    # Handle permissions for log file when running as root
+    if [ "$EUID" -eq 0 ]; then
+        # Running as root, ensure log file permissions are correct
+        touch /tmp/fastapi.log
+        chmod 666 /tmp/fastapi.log
+    fi
+
     nohup uvicorn main:app --host 127.0.0.1 --port 8002 >/tmp/fastapi.log 2>&1 &
     echo $! >/tmp/fastapi.pid
 
@@ -73,6 +81,7 @@ start_backend() {
         print_status "FastAPI backend started successfully"
     else
         print_error "Failed to start FastAPI backend"
+        print_status "Check logs with: tail -f /tmp/fastapi.log"
         exit 1
     fi
 }
@@ -202,51 +211,57 @@ show_logs() {
 # Function to deploy to production
 deploy_production() {
     print_status "Deploying PRSM USA to production..."
-    
+
     # Check if running as root or with sudo access
     if [ "$EUID" -ne 0 ]; then
         print_error "Production deployment requires sudo access"
         print_status "Please run: sudo ./deploy.sh deploy"
         exit 1
     fi
-    
+
     # Stop backend if running
     stop_backend
-    
+
+    # Clean up any existing nginx configurations for prsmusa.com
+    print_status "Cleaning up existing nginx configurations..."
+    rm -f /etc/nginx/sites-enabled/prsmusa
+    rm -f /etc/nginx/sites-enabled/prsmusa.nginx.conf
+    rm -f /etc/nginx/sites-available/prsmusa
+
+    # Remove default nginx site if it exists
+    if [ -f /etc/nginx/sites-enabled/default ]; then
+        rm /etc/nginx/sites-enabled/default
+        print_status "Removed default nginx site"
+    fi
+
     # Create production web directory
     print_status "Creating production web directory..."
     mkdir -p "$PRODUCTION_WEB_DIR"
-    
+
     # Copy frontend files to production location
     print_status "Copying frontend files to $PRODUCTION_WEB_DIR..."
     cp -r "$FE_DIR"/* "$PRODUCTION_WEB_DIR/"
-    
+
     # Set proper ownership and permissions
     print_status "Setting proper ownership and permissions..."
     chown -R www-data:www-data "$PRODUCTION_WEB_DIR"
     chmod -R 755 "$PRODUCTION_WEB_DIR"
-    
+
     # Copy nginx site config to sites-available
     print_status "Configuring nginx..."
     if [ -f "$NGINX_SITE_CONFIG" ]; then
         # Update the nginx config to use production path
-        sed 's|/home/rmintz/github/prsm-web/fe|/var/www/prsmusa|g' "$NGINX_SITE_CONFIG" > /etc/nginx/sites-available/prsmusa
-        
+        sed 's|/home/rmintz/github/prsm-web/fe|/var/www/prsmusa|g' "$NGINX_SITE_CONFIG" >/etc/nginx/sites-available/prsmusa
+
         # Create symlink in sites-enabled
         ln -sf /etc/nginx/sites-available/prsmusa /etc/nginx/sites-enabled/prsmusa
-        
-        # Remove default nginx site if it exists
-        if [ -f /etc/nginx/sites-enabled/default ]; then
-            rm /etc/nginx/sites-enabled/default
-            print_status "Removed default nginx site"
-        fi
-        
+
         print_status "Nginx site configuration updated"
     else
         print_error "Nginx site configuration not found at $NGINX_SITE_CONFIG"
         exit 1
     fi
-    
+
     # Test nginx configuration
     print_status "Testing nginx configuration..."
     if nginx -t; then
@@ -255,15 +270,15 @@ deploy_production() {
         print_error "Nginx configuration test failed"
         exit 1
     fi
-    
+
     # Reload nginx
     print_status "Reloading nginx..."
     systemctl reload nginx
-    
+
     # Start backend in production mode
     print_status "Starting backend in production mode..."
     start_backend
-    
+
     print_status "Production deployment complete!"
     print_status "Your site should now be accessible at https://prsmusa.com"
 }

@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_versioning import VersionedFastAPI, version
 from pydantic import BaseModel, Field
 import asyncio
+import time
 from fastapi.staticfiles import StaticFiles
 from session import session_layer
 import hashlib
@@ -55,27 +56,64 @@ def create_url_test(url: URL_Test):
     return url
 
 @app.post("/contact")
-async def contact_form(contact: ContactForm):
+async def contact_form(contact: ContactForm, request: Request):
     """
-    Handle contact form submissions from the frontend
+    Handle contact form submissions from the frontend with rate limiting
     """
     try:
+        # Get client IP and user agent for rate limiting
+        client_ip = request.client.host
+        user_agent = request.headers.get("user-agent", "unknown")
+        
+        # Create rate limit key combining IP and user agent
+        rate_limit_key = f"contact_rate_limit:{client_ip}:{hashlib.md5(user_agent.encode()).hexdigest()}"
+        
+        # Connect to Redis
+        r = redis.Redis(host='localhost', port=6379, db=0)
+        
+        # Check if rate limit key exists
+        if r.exists(rate_limit_key):
+            print(f"Rate limit exceeded for IP: {client_ip}, User-Agent: {user_agent}")
+            raise HTTPException(
+                status_code=429, 
+                detail="Too many requests. Please wait before submitting another contact form."
+            )
+        
+        # Set rate limit key with 1 minute TTL
+        r.setex(rate_limit_key, 60, "rate_limited")
+        
         # Log the contact form submission
-        print(f"Contact form submission: {contact.name} - {contact.email} - {contact.service}")
+        print(f"Contact form submission: {contact.name} - {contact.email} - {contact.service} from IP: {client_ip}")
         
-        # Here you could:
-        # 1. Save to database
-        # 2. Send email notification
-        # 3. Send SMS notification
-        # 4. Add to CRM system
+        # Save contact form data to Redis with 1 week TTL
+        contact_data = {
+            "name": contact.name,
+            "email": contact.email,
+            "phone": contact.phone,
+            "service": contact.service,
+            "message": contact.message,
+            "ip_address": client_ip,
+            "user_agent": user_agent,
+            "timestamp": str(asyncio.get_event_loop().time())
+        }
         
-        # For now, just return success response
+        # Create unique key for contact submission
+        import time
+        contact_key = f"contact_submission:{int(time.time())}:{hashlib.md5(contact.email.encode()).hexdigest()[:8]}"
+        
+        # Save to Redis with 1 week TTL (604800 seconds)
+        r.setex(contact_key, 604800, json.dumps(contact_data))
+        
+        print(f"Contact form saved to Redis with key: {contact_key}")
+        
+        # Return success response
         return {
             "status": "success",
             "message": "Thank you for your message! We'll get back to you soon.",
             "data": {
                 "name": contact.name,
-                "service": contact.service
+                "service": contact.service,
+                "submission_id": contact_key
             }
         }
         
@@ -226,4 +264,47 @@ def signup(user: User, request: Request):
     #     print(req_handler.text)
     
     return response
+
+@app.get("/admin/contact-submissions")
+async def get_contact_submissions(request: Request, limit: int = 10):
+    """
+    Get recent contact form submissions (admin only)
+    """
+    try:
+        # Connect to Redis
+        r = redis.Redis(host='localhost', port=6379, db=0)
+        
+        # Get all contact submission keys
+        contact_keys = r.keys("contact_submission:*")
+        
+        if not contact_keys:
+            return {"submissions": [], "total": 0}
+        
+        # Sort keys by timestamp (newest first)
+        contact_keys.sort(reverse=True)
+        
+        # Limit results
+        contact_keys = contact_keys[:limit]
+        
+        submissions = []
+        for key in contact_keys:
+            data = r.get(key)
+            if data:
+                submission = json.loads(data.decode('utf-8'))
+                submission['key'] = key.decode('utf-8')
+                submission['ttl'] = r.ttl(key)
+                submissions.append(submission)
+        
+        return {
+            "submissions": submissions,
+            "total": len(contact_keys),
+            "message": f"Retrieved {len(submissions)} contact submissions"
+        }
+        
+    except Exception as e:
+        print(f"Error retrieving contact submissions: {e}")
+        raise HTTPException(
+            status_code=500, 
+            detail="Error retrieving contact submissions"
+        )
 

@@ -143,7 +143,7 @@ async function submitContactForm(data) {
         submitButton.textContent = 'Sending...';
         submitButton.disabled = true;
 
-        // Simulate API call - replace with actual endpoint
+        // Send API request to backend
         const response = await fetch('/api/v0.1/contact', {
             method: 'POST',
             headers: {
@@ -153,14 +153,25 @@ async function submitContactForm(data) {
         });
 
         if (response.ok) {
+            const result = await response.json();
             showNotification('Thank you! Your message has been sent successfully. We\'ll get back to you soon.', 'success');
             document.getElementById('contactForm').reset();
+        } else if (response.status === 429) {
+            // Rate limiting error
+            const errorData = await response.json();
+            showNotification('Please wait before submitting another message. You can only submit one contact form per minute.', 'error');
         } else {
-            throw new Error('Failed to send message');
+            // Other errors
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Failed to send message');
         }
     } catch (error) {
         console.error('Error submitting form:', error);
-        showNotification('Sorry, there was an error sending your message. Please try again or contact us directly.', 'error');
+        if (error.message.includes('wait before submitting')) {
+            showNotification(error.message, 'error');
+        } else {
+            showNotification('Sorry, there was an error sending your message. Please try again or contact us directly.', 'error');
+        }
     } finally {
         // Reset button state
         submitButton.textContent = originalText;

@@ -1,21 +1,47 @@
 from fastapi import FastAPI, Query, Cookie, Response, Request, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi_versioning import VersionedFastAPI, version
 from pydantic import BaseModel, Field
 import asyncio
 from fastapi.staticfiles import StaticFiles
 from session import session_layer
+from contact_routes import router as contact_router
+from admin_routes import router as admin_router
+from database import create_tables
 import hashlib
 import sqlite3
 import redis
 import json
+import os
 
 
 app = FastAPI(
-    debug=True,
-    description="prsmusa.com backend",
-    #contact="raymondmintz11@gmail.com"
+    title="PRSM API",
+    description="PRSM USA backend API with enhanced contact form and admin capabilities",
+    version="1.0.0"
 )
+
+# CORS middleware
+allowed_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include contact routes
+app.include_router(contact_router, prefix="/api", tags=["contact"])
+
+# Include admin routes
+app.include_router(admin_router, prefix="/api/admin", tags=["admin"])
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize database tables on startup"""
+    await create_tables()
 
 # Serve static files from the 'static' directory
 app.mount("/static", StaticFiles(directory="static"), name="static")

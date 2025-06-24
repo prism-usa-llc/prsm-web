@@ -123,6 +123,55 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
     onLogout();
   };
 
+  const updateSubmission = async (submissionId: number, updates: { is_read?: boolean; is_flagged?: boolean }) => {
+    try {
+      const response = await fetch(`/api/admin/submissions/${submissionId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updates),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update submission');
+      }
+
+      // Refresh the submissions list
+      if (currentView === "all") {
+        fetchSubmissions();
+      } else if (currentView === "unread") {
+        fetchSubmissions("unread");
+      } else if (currentView === "flagged") {
+        fetchSubmissions("flagged");
+      }
+
+      // Also refresh stats if we're updating read status
+      if (updates.is_read !== undefined) {
+        fetchStats();
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update submission');
+    }
+  };
+
+  const handleMarkAsRead = (submissionId: number) => {
+    updateSubmission(submissionId, { is_read: true });
+  };
+
+  const handleMarkAsUnread = (submissionId: number) => {
+    updateSubmission(submissionId, { is_read: false });
+  };
+
+  const handleFlag = (submissionId: number) => {
+    updateSubmission(submissionId, { is_flagged: true });
+  };
+
+  const handleUnflag = (submissionId: number) => {
+    updateSubmission(submissionId, { is_flagged: false });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -227,10 +276,52 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
                           </span>
                         </div>
                       </div>
-                      <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="bg-gray-50 rounded-lg p-4 mb-4">
                         <p className="text-gray-700 whitespace-pre-wrap">
                           {submission.message}
                         </p>
+                      </div>
+                      
+                      {/* Action Buttons */}
+                      <div className="flex flex-wrap gap-2 pt-4 border-t border-gray-200">
+                        {submission.is_read ? (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleMarkAsUnread(submission.id)}
+                            className="text-orange-600 border-orange-300 hover:bg-orange-50"
+                          >
+                            Mark as Unread
+                          </Button>
+                        ) : (
+                          <Button
+                            size="sm"
+                            onClick={() => handleMarkAsRead(submission.id)}
+                            className="bg-green-600 hover:bg-green-700 text-white"
+                          >
+                            Mark as Read
+                          </Button>
+                        )}
+                        
+                        {submission.is_flagged ? (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleUnflag(submission.id)}
+                            className="text-gray-600 border-gray-300 hover:bg-gray-50"
+                          >
+                            Unflag
+                          </Button>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleFlag(submission.id)}
+                            className="text-red-600 border-red-300 hover:bg-red-50"
+                          >
+                            Flag
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </Card>

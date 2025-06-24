@@ -34,7 +34,7 @@ export default function Layout({ children }: LayoutProps) {
           <div className="flex justify-between items-center h-16">
             <div className="flex-shrink-0">
               <h1 className="text-2xl font-bold text-green-400 font-mono">
-                <span className="text-green-500">$</span> PRSM_USA
+                PRSM USA
               </h1>
             </div>
 
@@ -45,37 +45,37 @@ export default function Layout({ children }: LayoutProps) {
                   href="/"
                   className="text-green-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition-colors font-mono"
                 >
-                  ./home
+                  Home
                 </a>
                 <button
                   onClick={() => scrollToSection("services")}
                   className="text-green-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition-colors font-mono"
                 >
-                  ls services/
+                  Services
                 </button>
                 <button
                   onClick={() => scrollToSection("solutions")}
                   className="text-green-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition-colors font-mono"
                 >
-                  cat solutions
+                  Solutions
                 </button>
                 <button
                   onClick={() => scrollToSection("about")}
                   className="text-green-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition-colors font-mono"
                 >
-                  ./about
+                  About
                 </button>
                 <a
                   href="/products"
                   className="text-green-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition-colors font-mono"
                 >
-                  ls products/
+                  Products
                 </a>
                 <a
                   href="/contact"
                   className="bg-green-500 text-black hover:bg-green-400 px-4 py-2 rounded-md text-sm font-medium transition-colors font-mono border border-green-400"
                 >
-                  ./contact
+                  Contact
                 </a>
               </div>
             </nav>

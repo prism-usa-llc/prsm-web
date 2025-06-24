@@ -45,7 +45,7 @@ export default function Home() {
       >
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6 font-mono">
-            <span className="text-green-400">&gt;</span> Custom Software Solutions for Small Business
+            Custom Software Solutions for Small Business
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto leading-relaxed text-green-300">
             Specializing in SMS messaging alerts, website monitoring, queue
@@ -58,7 +58,7 @@ export default function Home() {
               onClick={() => navigate("/contact")}
               className="bg-green-500 text-black hover:bg-green-400 font-semibold shadow-lg border border-green-400 font-mono"
             >
-              ./get-started
+              Get Started
             </Button>
             <Button
               size="lg"
@@ -66,7 +66,7 @@ export default function Home() {
               onClick={() => scrollToSection("solutions")}
               className="border-2 border-green-500 bg-black/50 text-green-400 hover:bg-green-500 hover:text-black font-semibold shadow-lg font-mono"
             >
-              cat solutions.txt
+              View Solutions
             </Button>
           </div>
         </div>
@@ -77,7 +77,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-green-400 mb-4 font-mono">
-              <span className="text-green-500">$</span> ls /services
+              Our Services
             </h2>
             <p className="text-xl text-green-300 max-w-2xl mx-auto font-mono">
               Comprehensive technology solutions tailored for small businesses
@@ -103,7 +103,7 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-green-400 mb-3 font-mono">
-                  ./sms-alerts.sh
+                  SMS Alert Systems
                 </h3>
                 <p className="text-green-200 font-mono text-sm">
                   Custom SMS messaging solutions to keep your customers informed
@@ -130,7 +130,7 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-green-400 mb-3 font-mono">
-                  queue-manager.py
+                  Queue Management
                 </h3>
                 <p className="text-green-200 font-mono text-sm">
                   Streamline customer flow with our digital queue systems that
@@ -157,7 +157,7 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-green-400 mb-3 font-mono">
-                  it-consulting.exe
+                  IT Consulting
                 </h3>
                 <p className="text-green-200 font-mono text-sm">
                   Complete IT infrastructure setup including computer networks,
@@ -184,7 +184,7 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-green-400 mb-3 font-mono">
-                  monitor.js
+                  Website Monitoring
                 </h3>
                 <p className="text-green-200 font-mono text-sm">
                   24/7 website monitoring with SMS alerts when your site is down
@@ -212,7 +212,7 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-green-400 mb-3 font-mono">
-                  custom-dev.sh
+                  Custom Development
                 </h3>
                 <p className="text-green-200 font-mono text-sm">
                   Bespoke software solutions built specifically for your
@@ -229,7 +229,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-green-400 mb-4 font-mono">
-              <span className="text-green-500">$</span> cat featured-solutions.log
+              Featured Solutions
             </h2>
             <p className="text-xl text-green-300 max-w-2xl mx-auto font-mono">
               Real-world applications we've developed for businesses like yours
@@ -239,7 +239,7 @@ export default function Home() {
           <div className="grid lg:grid-cols-3 gap-8">
             <Card className="bg-gray-800 border-l-4 border-l-green-500 border border-green-500/30">
               <h3 className="text-xl font-semibold text-green-400 mb-3 font-mono">
-                [INFO] Customer Queue System
+                Customer Queue System
               </h3>
               <p className="text-green-200 mb-4 font-mono text-sm">
                 Perfect for restaurants and service businesses. Customers can
@@ -315,17 +315,16 @@ export default function Home() {
               </ul>
             </Card>
 
-            <Card className="bg-white border-l-4 border-l-green-600">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Secure Network Infrastructure
+            <Card className="bg-gray-800 border-l-4 border-l-green-500 border border-green-500/30">
+              <h3 className="text-xl font-semibold text-green-400 mb-3 font-mono">
+                Network Security Setup
               </h3>
-              <p className="text-gray-600 mb-4">
-                Complete network setup with VPN capabilities and logical
-                segregation for customer WiFi access. Ensures your business data
-                stays secure while providing convenient customer internet
-                access.
+              <p className="text-green-200 mb-4 font-mono text-sm">
+                Complete network setup with secure remote access and safe
+                customer WiFi. Keeps your business data protected while
+                providing convenient internet access for customers.
               </p>
-              <ul className="space-y-2 text-sm text-gray-600 mb-4">
+              <ul className="space-y-2 text-sm text-green-300 mb-4 font-mono">
                 <li className="flex items-center">
                   <svg
                     className="w-4 h-4 text-green-500 mr-2"
@@ -340,7 +339,7 @@ export default function Home() {
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  VPN setup & management
+                  Secure remote access
                 </li>
                 <li className="flex items-center">
                   <svg
@@ -356,7 +355,7 @@ export default function Home() {
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  Network segregation
+                  Separated networks
                 </li>
                 <li className="flex items-center">
                   <svg
@@ -372,7 +371,7 @@ export default function Home() {
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  Secure customer WiFi
+                  Safe customer WiFi
                 </li>
                 <li className="flex items-center">
                   <svg
@@ -393,16 +392,16 @@ export default function Home() {
               </ul>
             </Card>
 
-            <Card className="bg-white border-l-4 border-l-purple-600">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Website Monitoring & Alerting
+            <Card className="bg-gray-800 border-l-4 border-l-green-500 border border-green-500/30">
+              <h3 className="text-xl font-semibold text-green-400 mb-3 font-mono">
+                Website Monitoring & Alerts
               </h3>
-              <p className="text-gray-600 mb-4">
-                Never miss a website outage again. Our comprehensive monitoring
-                system checks your website's availability and performance 24/7,
-                sending instant SMS alerts when issues are detected.
+              <p className="text-green-200 mb-4 font-mono text-sm">
+                Never miss a website outage again. Our monitoring system
+                checks your website 24/7 and sends instant SMS alerts
+                when issues are detected.
               </p>
-              <ul className="space-y-2 text-sm text-gray-600 mb-4">
+              <ul className="space-y-2 text-sm text-green-300 mb-4 font-mono">
                 <li className="flex items-center">
                   <svg
                     className="w-4 h-4 text-green-500 mr-2"
@@ -433,7 +432,7 @@ export default function Home() {
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  Performance threshold alerts
+                  Performance alerts
                 </li>
                 <li className="flex items-center">
                   <svg
@@ -465,7 +464,7 @@ export default function Home() {
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  Detailed outage reports
+                  Detailed reports
                 </li>
               </ul>
             </Card>
@@ -474,20 +473,20 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-16 bg-gray-50">
+      <section id="about" className="py-16 bg-black border-b border-green-500/20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
-              Building Systems & Solutions Through Software
+            <h2 className="text-3xl md:text-4xl font-bold text-green-400 mb-8 font-mono">
+              <span className="text-green-500">$</span> About PRSM USA
             </h2>
-            <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+            <p className="text-lg text-green-200 mb-8 leading-relaxed font-mono">
               At PRSM USA, we believe that every small business deserves access
               to cutting-edge technology solutions. We specialize in creating
               custom software that addresses real business challenges, with a
               particular focus on SMS messaging systems that keep businesses
               connected with their customers.
             </p>
-            <p className="text-lg text-gray-600 mb-12 leading-relaxed">
+            <p className="text-lg text-green-200 mb-12 leading-relaxed font-mono">
               Our team combines technical expertise with deep understanding of
               small business operations. We don't just build software – we
               create comprehensive solutions that integrate seamlessly into your
@@ -496,18 +495,18 @@ export default function Home() {
 
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="text-4xl font-bold text-blue-600 mb-2">50+</div>
-                <div className="text-gray-600">Projects Completed</div>
+                <div className="text-4xl font-bold text-green-400 mb-2 font-mono">50+</div>
+                <div className="text-green-300 font-mono">Projects Completed</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-blue-600 mb-2">98%</div>
-                <div className="text-gray-600">Client Satisfaction</div>
+                <div className="text-4xl font-bold text-green-400 mb-2 font-mono">98%</div>
+                <div className="text-green-300 font-mono">Client Satisfaction</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-blue-600 mb-2">
+                <div className="text-4xl font-bold text-green-400 mb-2 font-mono">
                   24/7
                 </div>
-                <div className="text-gray-600">Support Available</div>
+                <div className="text-green-300 font-mono">Support Available</div>
               </div>
             </div>
           </div>
@@ -515,40 +514,40 @@ export default function Home() {
       </section>
 
       {/* Contact CTA Section */}
-      <section id="contact-cta" className="py-16 bg-blue-600 text-white">
+      <section id="contact-cta" className="py-16 bg-gray-900 text-green-400 border-b border-green-500/20">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 font-mono">
             Ready to Transform Your Business?
           </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
+          <p className="text-xl mb-8 max-w-2xl mx-auto text-green-300 font-mono">
             Let's discuss how our custom software solutions can help your
             business grow
           </p>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-8">
             <div className="text-center">
-              <h3 className="text-lg font-semibold mb-2">Email Us</h3>
+              <h3 className="text-lg font-semibold mb-2 text-green-400 font-mono">Email Us</h3>
               <a
                 href="mailto:prsmusallc@gmail.com"
-                className="text-blue-200 hover:text-white"
+                className="text-green-300 hover:text-green-400 font-mono"
               >
                 prsmusallc@gmail.com
               </a>
             </div>
             <div className="text-center">
-              <h3 className="text-lg font-semibold mb-2">Call Us</h3>
-              <p className="text-blue-200">+1 (555) 123-4567</p>
+              <h3 className="text-lg font-semibold mb-2 text-green-400 font-mono">Call Us</h3>
+              <p className="text-green-300 font-mono">+1 (555) 123-4567</p>
             </div>
             <div className="text-center">
-              <h3 className="text-lg font-semibold mb-2">Business Hours</h3>
-              <p className="text-blue-200">Mon-Fri: 9AM-6PM EST</p>
+              <h3 className="text-lg font-semibold mb-2 text-green-400 font-mono">Business Hours</h3>
+              <p className="text-green-300 font-mono">Mon-Fri: 9AM-6PM EST</p>
             </div>
           </div>
 
           <Button
             size="lg"
             onClick={() => navigate("/contact")}
-            className="bg-white text-blue-600 hover:bg-gray-100"
+            className="bg-green-500 text-black hover:bg-green-400 font-mono border border-green-400"
           >
             Send Message
           </Button>

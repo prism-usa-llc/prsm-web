@@ -64,7 +64,7 @@ export default function Home() {
               size="lg"
               variant="outline"
               onClick={() => scrollToSection("solutions")}
-              className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-blue-600 font-semibold shadow-lg"
+              className="border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-blue-600 font-semibold shadow-lg"
             >
               Our Solutions
             </Button>

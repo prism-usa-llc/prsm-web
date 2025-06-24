@@ -36,7 +36,7 @@ export default function Contact() {
     
     const getFormToken = async () => {
       try {
-        const response = await fetch('/api/form-token');
+        const response = await fetch('/api/v0.1/form-token');
         if (response.ok) {
           const data = await response.json();
           setFormToken(data.token);
@@ -62,7 +62,7 @@ export default function Contact() {
         form_load_time: formLoadTime / 1000, // Convert to seconds
       };
 
-      const response = await fetch('/api/contact', {
+      const response = await fetch('/api/v0.1/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ export default function Contact() {
         alert(result.message || 'Thank you for your message! We\'ll get back to you soon.');
         reset();
         // Get new form token
-        const tokenResponse = await fetch('/api/form-token');
+        const tokenResponse = await fetch('/api/v0.1/form-token');
         if (tokenResponse.ok) {
           const tokenData = await tokenResponse.json();
           setFormToken(tokenData.token);
@@ -91,90 +91,156 @@ export default function Contact() {
   };
 
   return (
-    <div className="px-4 py-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Contact Us
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            Get In Touch
           </h1>
-          <p className="text-xl text-gray-600">
-            We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+          <p className="text-xl md:text-2xl text-blue-100 max-w-2xl mx-auto">
+            Ready to transform your business with custom software solutions? 
+            We\'d love to hear from you and discuss your project.
           </p>
         </div>
+      </div>
 
-        <Card>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <Input
-              label="Name"
-              {...register('name')}
-              error={errors.name?.message}
-              placeholder="Your full name"
-            />
-
-            <Input
-              label="Email"
-              type="email"
-              {...register('email')}
-              error={errors.email?.message}
-              placeholder="your.email@example.com"
-            />
-
-            <Input
-              label="Phone (Optional)"
-              type="tel"
-              {...register('phone')}
-              error={errors.phone?.message}
-              placeholder="(555) 123-4567"
-            />
-
-            {/* Honeypot field - hidden from users */}
-            <div style={{ opacity: 0, position: 'absolute', top: '-9999px', left: '-9999px' }}>
-              <Input
-                {...register('website')}
-                tabIndex={-1}
-                autoComplete="off"
-              />
-            </div>
-
+      {/* Contact Form Section */}
+      <div className="py-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16">
+            {/* Contact Form */}
             <div>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                Message
-              </label>
-              <textarea
-                id="message"
-                {...register('message')}
-                rows={4}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 focus:ring-1"
-                placeholder="Tell us about your project or how we can help..."
-              />
-              {errors.message && (
-                <p className="mt-1 text-sm text-red-600">{errors.message.message}</p>
-              )}
+              <Card className="bg-white shadow-xl border-0">
+                <div className="p-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a message</h2>
+                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                    <Input
+                      label="Name"
+                      {...register('name')}
+                      error={errors.name?.message}
+                      placeholder="Your full name"
+                    />
+
+                    <Input
+                      label="Email"
+                      type="email"
+                      {...register('email')}
+                      error={errors.email?.message}
+                      placeholder="your.email@example.com"
+                    />
+
+                    <Input
+                      label="Phone (Optional)"
+                      type="tel"
+                      {...register('phone')}
+                      error={errors.phone?.message}
+                      placeholder="(555) 123-4567"
+                    />
+
+                    {/* Honeypot field - hidden from users */}
+                    <div style={{ opacity: 0, position: 'absolute', top: '-9999px', left: '-9999px' }}>
+                      <Input
+                        {...register('website')}
+                        tabIndex={-1}
+                        autoComplete="off"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                        Message
+                      </label>
+                      <textarea
+                        id="message"
+                        {...register('message')}
+                        rows={5}
+                        className="block w-full rounded-lg border-gray-300 bg-white text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 focus:ring-1 px-4 py-3"
+                        placeholder="Tell us about your project or how we can help..."
+                      />
+                      {errors.message && (
+                        <p className="mt-1 text-sm text-red-600">{errors.message.message}</p>
+                      )}
+                    </div>
+
+                    <Button
+                      type="submit"
+                      loading={isSubmitting}
+                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-200"
+                      size="lg"
+                    >
+                      Send Message
+                    </Button>
+                  </form>
+                </div>
+              </Card>
             </div>
 
-            <Button
-              type="submit"
-              loading={isSubmitting}
-              className="w-full"
-              size="lg"
-            >
-              Send Message
-            </Button>
-          </form>
-        </Card>
+            {/* Contact Information */}
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Let\'s work together</h2>
+                <p className="text-lg text-gray-600 mb-8">
+                  We specialize in creating custom software solutions that help small businesses thrive. 
+                  From SMS systems to queue management, we\'re here to bring your ideas to life.
+                </p>
+              </div>
 
-        <div className="mt-12 grid md:grid-cols-3 gap-8 text-center">
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-2">Email</h3>
-            <p className="text-gray-600">info@prsmusa.com</p>
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-2">Phone</h3>
-            <p className="text-gray-600">(555) 123-4567</p>
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-2">Address</h3>
-            <p className="text-gray-600">123 Business St, Suite 100</p>
+              <div className="grid gap-8">
+                <div className="bg-white rounded-xl p-6 shadow-lg">
+                  <div className="flex items-center mb-4">
+                    <div className="bg-blue-100 rounded-lg p-3">
+                      <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <div className="ml-4">
+                      <h3 className="text-lg font-semibold text-gray-900">Email</h3>
+                      <p className="text-gray-600">
+                        <a href="mailto:prsmusallc@gmail.com" className="hover:text-blue-600 transition-colors">
+                          prsmusallc@gmail.com
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-xl p-6 shadow-lg">
+                  <div className="flex items-center mb-4">
+                    <div className="bg-green-100 rounded-lg p-3">
+                      <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                    </div>
+                    <div className="ml-4">
+                      <h3 className="text-lg font-semibold text-gray-900">Phone</h3>
+                      <p className="text-gray-600">+1 (555) 123-4567</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-xl p-6 shadow-lg">
+                  <div className="flex items-center mb-4">
+                    <div className="bg-purple-100 rounded-lg p-3">
+                      <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div className="ml-4">
+                      <h3 className="text-lg font-semibold text-gray-900">Business Hours</h3>
+                      <p className="text-gray-600">Mon-Fri: 9AM-6PM EST</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 text-white">
+                <h3 className="text-lg font-bold mb-2">Quick Response Guarantee</h3>
+                <p className="text-blue-100">
+                  We typically respond to all inquiries within 24 hours during business days.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

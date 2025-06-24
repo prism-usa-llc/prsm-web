@@ -17,7 +17,7 @@ export default function Card({ children, className, padding = 'md' }: CardProps)
   return (
     <div
       className={clsx(
-        'bg-white rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-200',
+        'bg-gray-800 rounded-lg border border-green-500/30 shadow-lg hover:shadow-xl hover:border-green-400/50 transition-all duration-200',
         paddingClasses[padding],
         className
       )}

@@ -32,22 +32,22 @@ export default function Home() {
       }
     };
 
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
 
   return (
-    <div>
+    <div className="bg-gray-900 text-green-400">
       {/* Hero Section */}
       <section
         id="home"
-        className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20"
+        className="bg-gradient-to-br from-gray-900 via-black to-gray-800 text-green-400 py-20 border-b border-green-500/20"
       >
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
-            Custom Software Solutions for Small Business
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 font-mono">
+            <span className="text-green-400">&gt;</span> Custom Software Solutions for Small Business
           </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto leading-relaxed text-green-300">
             Specializing in SMS messaging alerts, website monitoring, queue
             management systems, and comprehensive IT consulting to help your
             business thrive in the digital age.
@@ -56,40 +56,40 @@ export default function Home() {
             <Button
               size="lg"
               onClick={() => navigate("/contact")}
-              className="bg-white text-blue-600 hover:bg-blue-50 font-semibold shadow-lg"
+              className="bg-green-500 text-black hover:bg-green-400 font-semibold shadow-lg border border-green-400 font-mono"
             >
-              Get Started
+              ./get-started
             </Button>
             <Button
               size="lg"
               variant="outline"
               onClick={() => scrollToSection("solutions")}
-              className="border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-blue-600 font-semibold shadow-lg"
+              className="border-2 border-green-500 bg-black/50 text-green-400 hover:bg-green-500 hover:text-black font-semibold shadow-lg font-mono"
             >
-              Our Solutions
+              cat solutions.txt
             </Button>
           </div>
         </div>
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-16 bg-gray-50">
+      <section id="services" className="py-16 bg-black border-b border-green-500/20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Our Services
+            <h2 className="text-3xl md:text-4xl font-bold text-green-400 mb-4 font-mono">
+              <span className="text-green-500">$</span> ls /services
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-green-300 max-w-2xl mx-auto font-mono">
               Comprehensive technology solutions tailored for small businesses
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card>
+            <Card className="bg-gray-800 border-green-500/30 hover:border-green-400 transition-colors">
               <div className="text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-green-500/20 border border-green-500 rounded-lg flex items-center justify-center mx-auto mb-4">
                   <svg
-                    className="w-8 h-8 text-blue-600"
+                    className="w-8 h-8 text-green-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -102,21 +102,21 @@ export default function Home() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  SMS Alert Systems
+                <h3 className="text-xl font-semibold text-green-400 mb-3 font-mono">
+                  ./sms-alerts.sh
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-green-200 font-mono text-sm">
                   Custom SMS messaging solutions to keep your customers informed
                   and engaged with real-time notifications and alerts.
                 </p>
               </div>
             </Card>
 
-            <Card>
+            <Card className="bg-gray-800 border-green-500/30 hover:border-green-400 transition-colors">
               <div className="text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-green-500/20 border border-green-500 rounded-lg flex items-center justify-center mx-auto mb-4">
                   <svg
-                    className="w-8 h-8 text-blue-600"
+                    className="w-8 h-8 text-green-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -129,21 +129,21 @@ export default function Home() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Queue Management
+                <h3 className="text-xl font-semibold text-green-400 mb-3 font-mono">
+                  queue-manager.py
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-green-200 font-mono text-sm">
                   Streamline customer flow with our digital queue systems that
                   allow customers to check in remotely and return when ready.
                 </p>
               </div>
             </Card>
 
-            <Card>
+            <Card className="bg-gray-800 border-green-500/30 hover:border-green-400 transition-colors">
               <div className="text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-green-500/20 border border-green-500 rounded-lg flex items-center justify-center mx-auto mb-4">
                   <svg
-                    className="w-8 h-8 text-blue-600"
+                    className="w-8 h-8 text-green-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -156,21 +156,21 @@ export default function Home() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  IT Consulting
+                <h3 className="text-xl font-semibold text-green-400 mb-3 font-mono">
+                  it-consulting.exe
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-green-200 font-mono text-sm">
                   Complete IT infrastructure setup including computer networks,
                   VPN solutions, and secure customer WiFi access.
                 </p>
               </div>
             </Card>
 
-            <Card>
+            <Card className="bg-gray-800 border-green-500/30 hover:border-green-400 transition-colors">
               <div className="text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-green-500/20 border border-green-500 rounded-lg flex items-center justify-center mx-auto mb-4">
                   <svg
-                    className="w-8 h-8 text-blue-600"
+                    className="w-8 h-8 text-green-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -183,10 +183,10 @@ export default function Home() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Website Monitoring
+                <h3 className="text-xl font-semibold text-green-400 mb-3 font-mono">
+                  monitor.js
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-green-200 font-mono text-sm">
                   24/7 website monitoring with SMS alerts when your site is down
                   or slow. Get notified instantly when performance drops below
                   your threshold.
@@ -194,11 +194,11 @@ export default function Home() {
               </div>
             </Card>
 
-            <Card>
+            <Card className="bg-gray-800 border-green-500/30 hover:border-green-400 transition-colors">
               <div className="text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-green-500/20 border border-green-500 rounded-lg flex items-center justify-center mx-auto mb-4">
                   <svg
-                    className="w-8 h-8 text-blue-600"
+                    className="w-8 h-8 text-green-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -211,10 +211,10 @@ export default function Home() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Custom Development
+                <h3 className="text-xl font-semibold text-green-400 mb-3 font-mono">
+                  custom-dev.sh
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-green-200 font-mono text-sm">
                   Bespoke software solutions built specifically for your
                   business needs and workflow requirements.
                 </p>
@@ -225,29 +225,29 @@ export default function Home() {
       </section>
 
       {/* Featured Solutions Section */}
-      <section id="solutions" className="py-16">
+      <section id="solutions" className="py-16 bg-gray-900 border-b border-green-500/20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Featured Solutions
+            <h2 className="text-3xl md:text-4xl font-bold text-green-400 mb-4 font-mono">
+              <span className="text-green-500">$</span> cat featured-solutions.log
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-green-300 max-w-2xl mx-auto font-mono">
               Real-world applications we've developed for businesses like yours
             </p>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
-            <Card className="bg-white border-l-4 border-l-blue-600">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                Customer Queue System
+            <Card className="bg-gray-800 border-l-4 border-l-green-500 border border-green-500/30">
+              <h3 className="text-xl font-semibold text-green-400 mb-3 font-mono">
+                [INFO] Customer Queue System
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-green-200 mb-4 font-mono text-sm">
                 Perfect for restaurants and service businesses. Customers can
                 check themselves in, receive SMS updates, and return exactly
                 when their turn is up. Reduces wait times and improves customer
                 satisfaction.
               </p>
-              <ul className="space-y-2 text-sm text-gray-600 mb-4">
+              <ul className="space-y-2 text-sm text-green-300 mb-4 font-mono">
                 <li className="flex items-center">
                   <svg
                     className="w-4 h-4 text-green-500 mr-2"

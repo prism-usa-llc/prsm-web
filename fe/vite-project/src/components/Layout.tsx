@@ -28,12 +28,14 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <header className="bg-white shadow-sm border-b sticky top-0 z-50">
+    <div className="min-h-screen bg-black text-green-400">
+      <header className="bg-gray-900 border-b border-green-500/30 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex-shrink-0">
-              <h1 className="text-2xl font-bold text-blue-600">PRSM USA</h1>
+              <h1 className="text-2xl font-bold text-green-400 font-mono">
+                <span className="text-green-500">$</span> PRSM_USA
+              </h1>
             </div>
 
             {/* Desktop Navigation */}
@@ -41,39 +43,39 @@ export default function Layout({ children }: LayoutProps) {
               <div className="ml-10 flex items-baseline space-x-6">
                 <a
                   href="/"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-green-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition-colors font-mono"
                 >
-                  Home
+                  ./home
                 </a>
                 <button
                   onClick={() => scrollToSection("services")}
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-green-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition-colors font-mono"
                 >
-                  Services
+                  ls services/
                 </button>
                 <button
                   onClick={() => scrollToSection("solutions")}
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-green-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition-colors font-mono"
                 >
-                  Solutions
+                  cat solutions
                 </button>
                 <button
                   onClick={() => scrollToSection("about")}
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-green-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition-colors font-mono"
                 >
-                  About
+                  ./about
                 </button>
                 <a
                   href="/products"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-green-300 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition-colors font-mono"
                 >
-                  Products
+                  ls products/
                 </a>
                 <a
                   href="/contact"
-                  className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="bg-green-500 text-black hover:bg-green-400 px-4 py-2 rounded-md text-sm font-medium transition-colors font-mono border border-green-400"
                 >
-                  Contact
+                  ./contact
                 </a>
               </div>
             </nav>
@@ -82,7 +84,7 @@ export default function Layout({ children }: LayoutProps) {
             <div className="md:hidden">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                className="inline-flex items-center justify-center p-2 rounded-md text-green-300 hover:text-green-400 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
               >
                 <svg
                   className="h-6 w-6"

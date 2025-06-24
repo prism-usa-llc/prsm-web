@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import Card from '../../components/Card';
-import Button from '../../components/Button';
+import { useEffect, useState } from "react";
+import Card from "../../components/Card";
+import Button from "../../components/Button";
 
 interface DashboardStats {
   total_submissions: number;
@@ -31,9 +31,11 @@ interface DashboardProps {
 export default function Dashboard({ token, onLogout }: DashboardProps) {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [submissions, setSubmissions] = useState<ContactSubmission[]>([]);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'all' | 'unread' | 'flagged'>('dashboard');
+  const [currentView, setCurrentView] = useState<
+    "dashboard" | "all" | "unread" | "flagged"
+  >("dashboard");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     fetchStats();
@@ -41,9 +43,9 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('/api/admin/dashboard/stats', {
+      const response = await fetch("/api/admin/dashboard/stats", {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -53,11 +55,11 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
       } else if (response.status === 401) {
         onLogout();
       } else {
-        setError('Failed to fetch dashboard stats');
+        setError("Failed to fetch dashboard stats");
       }
     } catch (error) {
-      console.error('Error fetching stats:', error);
-      setError('An error occurred while fetching stats');
+      console.error("Error fetching stats:", error);
+      setError("An error occurred while fetching stats");
     } finally {
       setLoading(false);
     }
@@ -66,17 +68,17 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
   const fetchSubmissions = async (filter?: string) => {
     try {
       setLoading(true);
-      let url = '/api/admin/submissions';
-      
-      if (filter === 'unread') {
-        url += '?is_read=false';
-      } else if (filter === 'flagged') {
-        url += '?is_flagged=true';
+      let url = "/api/admin/submissions";
+
+      if (filter === "unread") {
+        url += "?is_read=false";
+      } else if (filter === "flagged") {
+        url += "?is_flagged=true";
       }
-      
+
       const response = await fetch(url, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -86,38 +88,38 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
       } else if (response.status === 401) {
         onLogout();
       } else {
-        setError('Failed to fetch submissions');
+        setError("Failed to fetch submissions");
       }
     } catch (error) {
-      console.error('Error fetching submissions:', error);
-      setError('An error occurred while fetching submissions');
+      console.error("Error fetching submissions:", error);
+      setError("An error occurred while fetching submissions");
     } finally {
       setLoading(false);
     }
   };
 
   const handleViewAll = () => {
-    setCurrentView('all');
+    setCurrentView("all");
     fetchSubmissions();
   };
 
   const handleViewUnread = () => {
-    setCurrentView('unread');
-    fetchSubmissions('unread');
+    setCurrentView("unread");
+    fetchSubmissions("unread");
   };
 
   const handleViewFlagged = () => {
-    setCurrentView('flagged');
-    fetchSubmissions('flagged');
+    setCurrentView("flagged");
+    fetchSubmissions("flagged");
   };
 
   const handleBackToDashboard = () => {
-    setCurrentView('dashboard');
+    setCurrentView("dashboard");
     setSubmissions([]);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('admin_token');
+    localStorage.removeItem("admin_token");
     onLogout();
   };
 
@@ -146,7 +148,7 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
     );
   }
 
-  if (currentView !== 'dashboard') {
+  if (currentView !== "dashboard") {
     return (
       <div className="min-h-screen bg-gray-50">
         <header className="bg-white shadow">
@@ -157,9 +159,9 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
                   ← Back to Dashboard
                 </Button>
                 <h1 className="text-xl font-bold text-gray-900">
-                  {currentView === 'all' && 'All Submissions'}
-                  {currentView === 'unread' && 'Unread Messages'}
-                  {currentView === 'flagged' && 'Flagged Messages'}
+                  {currentView === "all" && "All Submissions"}
+                  {currentView === "unread" && "Unread Messages"}
+                  {currentView === "flagged" && "Flagged Messages"}
                 </h1>
               </div>
               <Button variant="outline" onClick={handleLogout}>
@@ -189,10 +191,16 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
                     <div className="p-6">
                       <div className="flex justify-between items-start mb-4">
                         <div>
-                          <h3 className="text-lg font-semibold text-gray-900">{submission.name}</h3>
-                          <p className="text-sm text-gray-600">{submission.email}</p>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {submission.name}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {submission.email}
+                          </p>
                           {submission.phone && (
-                            <p className="text-sm text-gray-600">{submission.phone}</p>
+                            <p className="text-sm text-gray-600">
+                              {submission.phone}
+                            </p>
                           )}
                         </div>
                         <div className="flex space-x-2">
@@ -207,18 +215,22 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
                             </span>
                           )}
                           <span className="text-xs text-gray-500">
-                            {new Date(submission.submission_time).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
+                            {new Date(
+                              submission.submission_time
+                            ).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
                             })}
                           </span>
                         </div>
                       </div>
                       <div className="bg-gray-50 rounded-lg p-4">
-                        <p className="text-gray-700 whitespace-pre-wrap">{submission.message}</p>
+                        <p className="text-gray-700 whitespace-pre-wrap">
+                          {submission.message}
+                        </p>
                       </div>
                     </div>
                   </Card>
@@ -248,46 +260,60 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
         <div className="px-4 py-6 sm:px-0">
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Overview</h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <Card>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">{stats?.total_submissions}</div>
-                  <div className="text-sm text-gray-500 mt-1">Total Submissions</div>
+                  <div className="text-3xl font-bold text-blue-600">
+                    {stats?.total_submissions}
+                  </div>
+                  <div className="text-sm text-gray-500 mt-1">
+                    Total Submissions
+                  </div>
                 </div>
               </Card>
 
               <Card>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-orange-600">{stats?.unread_submissions}</div>
+                  <div className="text-3xl font-bold text-orange-600">
+                    {stats?.unread_submissions}
+                  </div>
                   <div className="text-sm text-gray-500 mt-1">Unread</div>
                 </div>
               </Card>
 
               <Card>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-red-600">{stats?.flagged_submissions}</div>
+                  <div className="text-3xl font-bold text-red-600">
+                    {stats?.flagged_submissions}
+                  </div>
                   <div className="text-sm text-gray-500 mt-1">Flagged</div>
                 </div>
               </Card>
 
               <Card>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-green-600">{stats?.submissions_today}</div>
+                  <div className="text-3xl font-bold text-green-600">
+                    {stats?.submissions_today}
+                  </div>
                   <div className="text-sm text-gray-500 mt-1">Today</div>
                 </div>
               </Card>
 
               <Card>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">{stats?.submissions_this_week}</div>
+                  <div className="text-3xl font-bold text-blue-600">
+                    {stats?.submissions_this_week}
+                  </div>
                   <div className="text-sm text-gray-500 mt-1">This Week</div>
                 </div>
               </Card>
 
               <Card>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-purple-600">{stats?.submissions_this_month}</div>
+                  <div className="text-3xl font-bold text-purple-600">
+                    {stats?.submissions_this_month}
+                  </div>
                   <div className="text-sm text-gray-500 mt-1">This Month</div>
                 </div>
               </Card>
@@ -296,26 +322,48 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
 
           <div className="grid md:grid-cols-2 gap-6">
             <Card>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Quick Actions
+              </h3>
               <div className="space-y-3">
-                <Button className="w-full" variant="outline" onClick={handleViewAll}>
+                <Button
+                  className="w-full"
+                  variant="outline"
+                  onClick={handleViewAll}
+                >
                   View All Submissions
                 </Button>
-                <Button className="w-full" variant="outline" onClick={handleViewUnread}>
+                <Button
+                  className="w-full"
+                  variant="outline"
+                  onClick={handleViewUnread}
+                >
                   View Unread Messages
                 </Button>
-                <Button className="w-full" variant="outline" onClick={handleViewFlagged}>
+                <Button
+                  className="w-full"
+                  variant="outline"
+                  onClick={handleViewFlagged}
+                >
                   View Flagged Messages
                 </Button>
               </div>
             </Card>
 
             <Card>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Recent Activity
+              </h3>
               <div className="text-sm text-gray-600">
-                <p className="mb-2">• {stats?.submissions_today} new submissions today</p>
-                <p className="mb-2">• {stats?.unread_submissions} messages awaiting review</p>
-                <p>• {stats?.flagged_submissions} messages flagged for attention</p>
+                <p className="mb-2">
+                  • {stats?.submissions_today} new submissions today
+                </p>
+                <p className="mb-2">
+                  • {stats?.unread_submissions} messages awaiting review
+                </p>
+                <p>
+                  • {stats?.flagged_submissions} messages flagged for attention
+                </p>
               </div>
             </Card>
           </div>

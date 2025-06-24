@@ -73,7 +73,10 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-16 bg-black border-b border-green-500/20">
+      <section
+        id="services"
+        className="py-16 bg-black border-b border-green-500/20"
+      >
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-green-400 mb-4 font-mono">
@@ -225,7 +228,10 @@ export default function Home() {
       </section>
 
       {/* Featured Solutions Section */}
-      <section id="solutions" className="py-16 bg-gray-900 border-b border-green-500/20">
+      <section
+        id="solutions"
+        className="py-16 bg-gray-900 border-b border-green-500/20"
+      >
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-green-400 mb-4 font-mono">
@@ -397,9 +403,9 @@ export default function Home() {
                 Website Monitoring & Alerts
               </h3>
               <p className="text-green-200 mb-4 font-mono text-sm">
-                Never miss a website outage again. Our monitoring system
-                checks your website 24/7 and sends instant SMS alerts
-                when issues are detected.
+                Never miss a website outage again. Our monitoring system checks
+                your website 24/7 and sends instant SMS alerts when issues are
+                detected.
               </p>
               <ul className="space-y-2 text-sm text-green-300 mb-4 font-mono">
                 <li className="flex items-center">
@@ -473,7 +479,10 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-16 bg-black border-b border-green-500/20">
+      <section
+        id="about"
+        className="py-16 bg-black border-b border-green-500/20"
+      >
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-green-400 mb-8 font-mono">
@@ -495,18 +504,28 @@ export default function Home() {
 
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="text-4xl font-bold text-green-400 mb-2 font-mono">50+</div>
-                <div className="text-green-300 font-mono">Projects Completed</div>
+                <div className="text-4xl font-bold text-green-400 mb-2 font-mono">
+                  50+
+                </div>
+                <div className="text-green-300 font-mono">
+                  Projects Completed
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-green-400 mb-2 font-mono">98%</div>
-                <div className="text-green-300 font-mono">Client Satisfaction</div>
+                <div className="text-4xl font-bold text-green-400 mb-2 font-mono">
+                  98%
+                </div>
+                <div className="text-green-300 font-mono">
+                  Client Satisfaction
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-4xl font-bold text-green-400 mb-2 font-mono">
                   24/7
                 </div>
-                <div className="text-green-300 font-mono">Support Available</div>
+                <div className="text-green-300 font-mono">
+                  Support Available
+                </div>
               </div>
             </div>
           </div>
@@ -514,7 +533,10 @@ export default function Home() {
       </section>
 
       {/* Contact CTA Section */}
-      <section id="contact-cta" className="py-16 bg-gray-900 text-green-400 border-b border-green-500/20">
+      <section
+        id="contact-cta"
+        className="py-16 bg-gray-900 text-green-400 border-b border-green-500/20"
+      >
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 font-mono">
             Ready to Transform Your Business?
@@ -526,7 +548,9 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-8">
             <div className="text-center">
-              <h3 className="text-lg font-semibold mb-2 text-green-400 font-mono">Email Us</h3>
+              <h3 className="text-lg font-semibold mb-2 text-green-400 font-mono">
+                Email Us
+              </h3>
               <a
                 href="mailto:prsmusallc@gmail.com"
                 className="text-green-300 hover:text-green-400 font-mono"
@@ -535,11 +559,15 @@ export default function Home() {
               </a>
             </div>
             <div className="text-center">
-              <h3 className="text-lg font-semibold mb-2 text-green-400 font-mono">Call Us</h3>
+              <h3 className="text-lg font-semibold mb-2 text-green-400 font-mono">
+                Call Us
+              </h3>
               <p className="text-green-300 font-mono">+1 (555) 123-4567</p>
             </div>
             <div className="text-center">
-              <h3 className="text-lg font-semibold mb-2 text-green-400 font-mono">Business Hours</h3>
+              <h3 className="text-lg font-semibold mb-2 text-green-400 font-mono">
+                Business Hours
+              </h3>
               <p className="text-green-300 font-mono">Mon-Fri: 9AM-6PM EST</p>
             </div>
           </div>

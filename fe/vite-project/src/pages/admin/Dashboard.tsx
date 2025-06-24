@@ -123,19 +123,22 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
     onLogout();
   };
 
-  const updateSubmission = async (submissionId: number, updates: { is_read?: boolean; is_flagged?: boolean }) => {
+  const updateSubmission = async (
+    submissionId: number,
+    updates: { is_read?: boolean; is_flagged?: boolean }
+  ) => {
     try {
       const response = await fetch(`/api/admin/submissions/${submissionId}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(updates),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update submission');
+        throw new Error("Failed to update submission");
       }
 
       // Refresh the submissions list
@@ -152,7 +155,9 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
         fetchStats();
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update submission');
+      setError(
+        err instanceof Error ? err.message : "Failed to update submission"
+      );
     }
   };
 
@@ -174,10 +179,10 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-gray-600">Loading dashboard...</p>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-green-500"></div>
+          <p className="mt-4 text-green-400 font-mono">Loading dashboard...</p>
         </div>
       </div>
     );
@@ -185,11 +190,13 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <Card>
           <div className="text-center">
-            <h2 className="text-xl font-semibold text-red-600 mb-2">Error</h2>
-            <p className="text-gray-600 mb-4">{error}</p>
+            <h2 className="text-xl font-semibold text-red-400 mb-2 font-mono">
+              Error
+            </h2>
+            <p className="text-green-300 mb-4">{error}</p>
             <Button onClick={fetchStats}>Retry</Button>
           </div>
         </Card>
@@ -199,15 +206,15 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
 
   if (currentView !== "dashboard") {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <header className="bg-white shadow">
+      <div className="min-h-screen bg-gray-900">
+        <header className="bg-gray-800 border-b border-green-500/30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center space-x-4">
                 <Button variant="outline" onClick={handleBackToDashboard}>
                   ← Back to Dashboard
                 </Button>
-                <h1 className="text-xl font-bold text-gray-900">
+                <h1 className="text-xl font-bold text-green-400 font-mono">
                   {currentView === "all" && "All Submissions"}
                   {currentView === "unread" && "Unread Messages"}
                   {currentView === "flagged" && "Flagged Messages"}
@@ -224,13 +231,15 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
           <div className="px-4 py-6 sm:px-0">
             {loading ? (
               <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-                <p className="mt-2 text-gray-600">Loading submissions...</p>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mx-auto"></div>
+                <p className="mt-2 text-green-400 font-mono">
+                  Loading submissions...
+                </p>
               </div>
             ) : submissions.length === 0 ? (
               <Card>
                 <div className="text-center py-8">
-                  <p className="text-gray-600">No submissions found.</p>
+                  <p className="text-green-300">No submissions found.</p>
                 </div>
               </Card>
             ) : (
@@ -240,30 +249,30 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
                     <div className="p-6">
                       <div className="flex justify-between items-start mb-4">
                         <div>
-                          <h3 className="text-lg font-semibold text-gray-900">
+                          <h3 className="text-lg font-semibold text-green-400 font-mono">
                             {submission.name}
                           </h3>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-green-300">
                             {submission.email}
                           </p>
                           {submission.phone && (
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-green-300">
                               {submission.phone}
                             </p>
                           )}
                         </div>
                         <div className="flex space-x-2">
                           {!submission.is_read && (
-                            <span className="px-2 py-1 text-xs font-medium bg-orange-100 text-orange-800 rounded-full">
+                            <span className="px-2 py-1 text-xs font-medium bg-orange-500/20 text-orange-400 rounded-full border border-orange-500/50">
                               Unread
                             </span>
                           )}
                           {submission.is_flagged && (
-                            <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
+                            <span className="px-2 py-1 text-xs font-medium bg-red-500/20 text-red-400 rounded-full border border-red-500/50">
                               Flagged
                             </span>
                           )}
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-green-400 font-mono">
                             {new Date(
                               submission.submission_time
                             ).toLocaleDateString("en-US", {
@@ -276,20 +285,19 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
                           </span>
                         </div>
                       </div>
-                      <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                        <p className="text-gray-700 whitespace-pre-wrap">
+                      <div className="bg-gray-700 border border-green-500/30 rounded-lg p-4 mb-4">
+                        <p className="text-green-300 whitespace-pre-wrap">
                           {submission.message}
                         </p>
                       </div>
-                      
+
                       {/* Action Buttons */}
-                      <div className="flex flex-wrap gap-2 pt-4 border-t border-gray-200">
+                      <div className="flex flex-wrap gap-2 pt-4 border-t border-green-500/30">
                         {submission.is_read ? (
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() => handleMarkAsUnread(submission.id)}
-                            className="text-orange-600 border-orange-300 hover:bg-orange-50"
                           >
                             Mark as Unread
                           </Button>
@@ -297,18 +305,16 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
                           <Button
                             size="sm"
                             onClick={() => handleMarkAsRead(submission.id)}
-                            className="bg-green-600 hover:bg-green-700 text-white"
                           >
                             Mark as Read
                           </Button>
                         )}
-                        
+
                         {submission.is_flagged ? (
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() => handleUnflag(submission.id)}
-                            className="text-gray-600 border-gray-300 hover:bg-gray-50"
                           >
                             Unflag
                           </Button>
@@ -317,7 +323,6 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
                             size="sm"
                             variant="outline"
                             onClick={() => handleFlag(submission.id)}
-                            className="text-red-600 border-red-300 hover:bg-red-50"
                           >
                             Flag
                           </Button>
@@ -335,11 +340,13 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
+    <div className="min-h-screen bg-gray-900">
+      <header className="bg-gray-800 border-b border-green-500/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <h1 className="text-xl font-bold text-gray-900">Admin Dashboard</h1>
+            <h1 className="text-xl font-bold text-green-400 font-mono">
+              Admin Dashboard
+            </h1>
             <Button variant="outline" onClick={handleLogout}>
               Logout
             </Button>
@@ -350,15 +357,17 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Overview</h2>
+            <h2 className="text-2xl font-bold text-green-400 mb-6 font-mono">
+              Overview
+            </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <Card>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">
+                  <div className="text-3xl font-bold text-green-400 font-mono">
                     {stats?.total_submissions}
                   </div>
-                  <div className="text-sm text-gray-500 mt-1">
+                  <div className="text-sm text-green-300 mt-1">
                     Total Submissions
                   </div>
                 </div>
@@ -366,46 +375,46 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
 
               <Card>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-orange-600">
+                  <div className="text-3xl font-bold text-orange-400 font-mono">
                     {stats?.unread_submissions}
                   </div>
-                  <div className="text-sm text-gray-500 mt-1">Unread</div>
+                  <div className="text-sm text-green-300 mt-1">Unread</div>
                 </div>
               </Card>
 
               <Card>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-red-600">
+                  <div className="text-3xl font-bold text-red-400 font-mono">
                     {stats?.flagged_submissions}
                   </div>
-                  <div className="text-sm text-gray-500 mt-1">Flagged</div>
+                  <div className="text-sm text-green-300 mt-1">Flagged</div>
                 </div>
               </Card>
 
               <Card>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-green-600">
+                  <div className="text-3xl font-bold text-green-400 font-mono">
                     {stats?.submissions_today}
                   </div>
-                  <div className="text-sm text-gray-500 mt-1">Today</div>
+                  <div className="text-sm text-green-300 mt-1">Today</div>
                 </div>
               </Card>
 
               <Card>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">
+                  <div className="text-3xl font-bold text-green-400 font-mono">
                     {stats?.submissions_this_week}
                   </div>
-                  <div className="text-sm text-gray-500 mt-1">This Week</div>
+                  <div className="text-sm text-green-300 mt-1">This Week</div>
                 </div>
               </Card>
 
               <Card>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-purple-600">
+                  <div className="text-3xl font-bold text-green-400 font-mono">
                     {stats?.submissions_this_month}
                   </div>
-                  <div className="text-sm text-gray-500 mt-1">This Month</div>
+                  <div className="text-sm text-green-300 mt-1">This Month</div>
                 </div>
               </Card>
             </div>
@@ -413,7 +422,7 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
 
           <div className="grid md:grid-cols-2 gap-6">
             <Card>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <h3 className="text-lg font-semibold text-green-400 mb-4 font-mono">
                 Quick Actions
               </h3>
               <div className="space-y-3">
@@ -442,10 +451,10 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
             </Card>
 
             <Card>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <h3 className="text-lg font-semibold text-green-400 mb-4 font-mono">
                 Recent Activity
               </h3>
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-green-300">
                 <p className="mb-2">
                   • {stats?.submissions_today} new submissions today
                 </p>

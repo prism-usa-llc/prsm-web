@@ -261,14 +261,21 @@ CREATE TABLE admin_users (
 - ✅ Admin authentication system
 - ✅ Contact submission management endpoints
 
-### 🚧 In Progress / Admin Interface
+#### Modern UI/UX Design (June 2025)
 
-The admin interface structure exists but needs completion:
-
-- Basic admin login and dashboard components
-- Contact submission listing and management
-- User authentication with JWT tokens
-- Statistics and analytics display
+- ✅ **Complete theme consistency overhaul** - Unified dark terminal-inspired design
+- ✅ **Component standardization**: Button, Input, Card components updated with green accent theme
+- ✅ **Home page**: Modern, responsive dark theme with terminal aesthetics
+- ✅ **Products page**: Complete redesign from blue to green theme, professional service listings
+- ✅ **Contact page**: Dark theme integration with form validation
+- ✅ **Admin interface**: Full dark theme implementation
+  - ✅ Admin login page with dark theme and green accents
+  - ✅ Admin dashboard with statistics, message management, and consistent styling
+  - ✅ Message viewing/management with read/unread/flag functionality
+- ✅ **Global CSS**: Updated for consistent dark theme across all pages
+- ✅ **Accessibility**: High contrast green-on-dark color scheme
+- ✅ **Responsive design**: Optimized for all screen sizes
+- ✅ **Brand consistency**: Terminal/developer-focused aesthetic throughout
 
 ### 🎯 Deployment Information
 
@@ -298,11 +305,140 @@ The admin interface structure exists but needs completion:
 - HTTPS/SSL encryption
 - Environment variable configuration for sensitive data
 
+## Development Workflow
+
+### Primary Development Environment
+
+**Remote Server**: central.prsmusa.com  
+**Path**: `/home/r4wm/github/prsm-web`  
+**User**: r4wm
+
+### Workflow Process
+
+1. **Access Remote Development Environment**
+
+   ```bash
+   # SSH into remote server
+   ssh r4wm@central.prsmusa.com
+
+   # Navigate to project directory
+   cd /home/r4wm/github/prsm-web
+   ```
+
+2. **Make Changes on Remote Server First**
+
+   - Edit files directly on the remote server using vim/nano or file transfer
+   - Make and test all changes in the live environment
+   - Use Docker Compose to rebuild and redeploy services as needed
+   - Test functionality thoroughly before committing
+
+3. **Development Commands on Remote**
+
+   ```bash
+   # Frontend development
+   cd fe/vite-project
+   npm run dev          # Start development server
+   npm run build        # Build for production
+
+   # Backend development
+   cd api/fastapi
+   # Edit Python files and test
+
+   # Docker operations
+   cd /home/r4wm/github/prsm-web
+   docker compose up --build -d          # Rebuild all services
+   docker compose up --build -d frontend # Rebuild just frontend
+   docker compose up --build -d backend  # Rebuild just backend
+   docker compose logs [service-name]    # Check logs
+   docker compose ps                     # Check status
+   ```
+
+4. **Testing and Validation**
+
+   - Test website functionality at https://central.prsmusa.com
+   - Verify contact form submission and admin functionality
+   - Check responsive design on different screen sizes
+   - Validate API endpoints using curl or browser dev tools
+
+5. **Commit and Synchronize**
+
+   - Once changes are approved and working on remote:
+     ```bash
+     git add .
+     git commit -m "Description of changes"
+     git push origin main
+     ```
+   - Pull changes to local repository:
+     ```bash
+     git pull origin main
+     ```
+
+6. **Deployment Commands**
+
+   ```bash
+   # On remote server (central.prsmusa.com)
+   cd /home/r4wm/github/prsm-web
+
+   # Rebuild and restart specific services
+   docker compose up --build -d frontend
+   docker compose up --build -d backend
+
+   # Or restart all services
+   docker compose down && docker compose up --build -d
+
+   # Check service status
+   docker compose ps
+   docker compose logs [service-name]
+   ```
+
+7. **Database Management**
+
+   ```bash
+   # Connect to PostgreSQL on remote
+   docker compose exec postgres psql -U prsm_user -d prsm_db
+
+   # Run migrations
+   docker compose exec backend alembic upgrade head
+   ```
+
+### Important Notes
+
+- **Always test on remote first** before committing changes
+- **Remote server is the authoritative environment** for testing and deployment
+- **Local repository is primarily for backup and version control**
+- **All production deployments happen on the remote server**
+- **Keep local and remote repositories synchronized** after approved changes
+- **Use SSH for remote access**: `ssh r4wm@central.prsmusa.com`
+- **Project path**: `/home/r4wm/github/prsm-web`
+- **Live site**: https://central.prsmusa.com
+- **Admin access**: https://central.prsmusa.com/admin
+- **Database access**: Via Docker container on remote server
+- **File editing**: Can be done directly on remote server or via file transfer
+
+### Development Best Practices
+
+1. **Make small, incremental changes** and test each one
+2. **Use Docker Compose** for consistent environment management
+3. **Check logs regularly** using `docker compose logs [service-name]`
+4. **Test all functionality** before committing to version control
+5. **Document changes** in commit messages and update CLAUDE.md
+6. **Keep this workflow documentation updated** as processes evolve
+
+### Recent Work Completed (June 2025)
+
+- ✅ **Theme Consistency Overhaul**: Unified dark terminal-inspired design across all pages
+- ✅ **Component Standardization**: Button, Input, Card components with consistent green theme
+- ✅ **Admin Interface Completion**: Full dark theme with message management functionality
+- ✅ **Products Page Redesign**: Professional service listings with modern dark theme
+- ✅ **Responsive Design Optimization**: All pages work seamlessly on mobile and desktop
+- ✅ **Build System Validation**: Frontend builds successfully with no errors
+- ✅ **Cross-page Navigation**: Consistent styling and user experience throughout site
+
 ## Next Steps
 
 1. Review this enhancement plan
 2. Prioritize features based on business needs
-3. Set up development environment with required technologies
+3. Follow the remote-first development workflow
 4. Begin implementation following the phased approach
 5. Schedule regular review points to assess progress and adjust plans
 

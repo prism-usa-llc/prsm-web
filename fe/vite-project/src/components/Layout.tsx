@@ -1,5 +1,5 @@
 import { ReactNode, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface LayoutProps {
   children: ReactNode;
@@ -8,6 +8,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const isHomePage = location.pathname === "/";
 
   const scrollToSection = (id: string) => {
@@ -16,7 +17,12 @@ export default function Layout({ children }: LayoutProps) {
       element?.scrollIntoView({ behavior: "smooth" });
     } else {
       // Navigate to home page with section hash
-      window.location.href = `/#${id}`;
+      navigate(`/#${id}`);
+      // Wait for navigation then scroll
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        element?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
     }
     setIsMenuOpen(false);
   };

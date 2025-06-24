@@ -56,7 +56,7 @@ export default function Home() {
             <Button
               size="lg"
               onClick={() => navigate("/contact")}
-              className="bg-white text-blue-600 hover:bg-gray-100"
+              className="bg-white text-blue-600 hover:bg-blue-50 font-semibold shadow-lg"
             >
               Get Started
             </Button>
@@ -64,7 +64,7 @@ export default function Home() {
               size="lg"
               variant="outline"
               onClick={() => scrollToSection("solutions")}
-              className="border-white text-white hover:bg-white hover:text-blue-600"
+              className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-blue-600 font-semibold shadow-lg"
             >
               Our Solutions
             </Button>

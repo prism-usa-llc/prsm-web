@@ -1,9 +1,19 @@
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import Column, Integer, String, Text, Boolean, SmallInteger, DateTime
 from sqlalchemy.sql import func
 from typing import AsyncGenerator
+
+# Load environment variables from .env file
+# Make sure we use the absolute path to ensure it's found
+env_path = Path(__file__).parent / '.env'
+load_dotenv(dotenv_path=env_path)
+
+# Print environment variables for debugging (remove in production)
+print(f"Database URL from env: {os.getenv('DATABASE_URL')}")
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL", 

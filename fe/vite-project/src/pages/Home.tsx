@@ -1,7 +1,10 @@
-import Card from '../components/Card';
-import Button from '../components/Button';
+import { useNavigate } from "react-router-dom";
+import Card from "../components/Card";
+import Button from "../components/Button";
 
 export default function Home() {
+  const navigate = useNavigate();
+
   return (
     <div className="px-4 py-8">
       <div className="text-center mb-12">
@@ -19,9 +22,14 @@ export default function Home() {
             Quality Products
           </h3>
           <p className="text-gray-600 mb-4">
-            We deliver high-quality products that meet your specific needs and exceed your expectations.
+            We deliver high-quality products that meet your specific needs and
+            exceed your expectations.
           </p>
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate("/products")}
+          >
             Learn More
           </Button>
         </Card>
@@ -31,9 +39,14 @@ export default function Home() {
             Expert Support
           </h3>
           <p className="text-gray-600 mb-4">
-            Our dedicated team provides comprehensive support to ensure your success every step of the way.
+            Our dedicated team provides comprehensive support to ensure your
+            success every step of the way.
           </p>
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate("/contact")}
+          >
             Contact Us
           </Button>
         </Card>
@@ -43,16 +56,21 @@ export default function Home() {
             Innovation
           </h3>
           <p className="text-gray-600 mb-4">
-            Stay ahead with our cutting-edge solutions designed for the modern business landscape.
+            Stay ahead with our cutting-edge solutions designed for the modern
+            business landscape.
           </p>
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate("/products")}
+          >
             Explore
           </Button>
         </Card>
       </div>
 
       <div className="text-center">
-        <Button size="lg">
+        <Button size="lg" onClick={() => navigate("/contact")}>
           Get Started Today
         </Button>
       </div>

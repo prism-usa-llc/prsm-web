@@ -23,9 +23,9 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen bg-white">
-      <header className="bg-white/95 backdrop-blur-sm shadow-sm border-b sticky top-0 z-50">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto flex justify-between items-center h-16">
+      <header className="bg-white shadow-sm border-b sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
             <div className="flex-shrink-0">
               <h1 className="text-2xl font-bold text-blue-600">PRSM USA</h1>
             </div>
@@ -58,8 +58,14 @@ export default function Layout({ children }: LayoutProps) {
                   About
                 </button>
                 <a 
+                  href="/products" 
+                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Products
+                </a>
+                <a 
                   href="/contact" 
-                  className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+                  className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   Contact
                 </a>
@@ -69,6 +75,7 @@ export default function Layout({ children }: LayoutProps) {
             {/* Mobile menu button */}
             <div className="md:hidden">
               <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
               >
                 <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -85,7 +92,7 @@ export default function Layout({ children }: LayoutProps) {
           {/* Mobile Navigation */}
           {isMenuOpen && (
             <div className="md:hidden">
-              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t bg-white/95 backdrop-blur-sm">
+              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t">
                 <a 
                   href="/" 
                   className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
@@ -112,6 +119,13 @@ export default function Layout({ children }: LayoutProps) {
                   About
                 </button>
                 <a 
+                  href="/products" 
+                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Products
+                </a>
+                <a 
                   href="/contact" 
                   className="bg-blue-600 text-white hover:bg-blue-700 block px-3 py-2 rounded-md text-base font-medium"
                   onClick={() => setIsMenuOpen(false)}
@@ -124,13 +138,13 @@ export default function Layout({ children }: LayoutProps) {
         </div>
       </header>
       
-      <main className="w-full">
+      <main className="min-h-screen">
         {children}
       </main>
       
       <footer className="bg-gray-900 text-white">
-        <div className="w-full px-4 sm:px-6 lg:px-8 py-12">
-          <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid md:grid-cols-3 gap-8">
             <div>
               <h3 className="text-xl font-bold mb-4">PRSM USA</h3>
               <p className="text-gray-300 mb-4">
@@ -154,7 +168,7 @@ export default function Layout({ children }: LayoutProps) {
               <h4 className="font-semibold text-lg mb-4">Contact</h4>
               <div className="space-y-2 text-gray-300">
                 <p>
-                  <a href="mailto:prsmusallc@gmail.com" className="hover:text-white transition-colors">
+                  <a href="mailto:prsmusallc@gmail.com" className="hover:text-white">
                     prsmusallc@gmail.com
                   </a>
                 </p>

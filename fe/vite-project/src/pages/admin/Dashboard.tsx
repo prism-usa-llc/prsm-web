@@ -11,6 +11,18 @@ interface DashboardStats {
   submissions_this_month: number;
 }
 
+interface ContactSubmission {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string;
+  message: string;
+  submission_time: string;
+  is_read: boolean;
+  is_flagged: boolean;
+  status: string;
+}
+
 interface DashboardProps {
   token: string;
   onLogout: () => void;
@@ -18,6 +30,8 @@ interface DashboardProps {
 
 export default function Dashboard({ token, onLogout }: DashboardProps) {
   const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [submissions, setSubmissions] = useState<ContactSubmission[]>([]);
+  const [currentView, setCurrentView] = useState<'dashboard' | 'all' | 'unread' | 'flagged'>('dashboard');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
 
@@ -49,6 +63,59 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
     }
   };
 
+  const fetchSubmissions = async (filter?: string) => {
+    try {
+      setLoading(true);
+      let url = '/api/admin/submissions';
+      
+      if (filter === 'unread') {
+        url += '?is_read=false';
+      } else if (filter === 'flagged') {
+        url += '?is_flagged=true';
+      }
+      
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSubmissions(data);
+      } else if (response.status === 401) {
+        onLogout();
+      } else {
+        setError('Failed to fetch submissions');
+      }
+    } catch (error) {
+      console.error('Error fetching submissions:', error);
+      setError('An error occurred while fetching submissions');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleViewAll = () => {
+    setCurrentView('all');
+    fetchSubmissions();
+  };
+
+  const handleViewUnread = () => {
+    setCurrentView('unread');
+    fetchSubmissions('unread');
+  };
+
+  const handleViewFlagged = () => {
+    setCurrentView('flagged');
+    fetchSubmissions('flagged');
+  };
+
+  const handleBackToDashboard = () => {
+    setCurrentView('dashboard');
+    setSubmissions([]);
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('admin_token');
     onLogout();
@@ -75,6 +142,91 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
             <Button onClick={fetchStats}>Retry</Button>
           </div>
         </Card>
+      </div>
+    );
+  }
+
+  if (currentView !== 'dashboard') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <header className="bg-white shadow">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              <div className="flex items-center space-x-4">
+                <Button variant="outline" onClick={handleBackToDashboard}>
+                  ← Back to Dashboard
+                </Button>
+                <h1 className="text-xl font-bold text-gray-900">
+                  {currentView === 'all' && 'All Submissions'}
+                  {currentView === 'unread' && 'Unread Messages'}
+                  {currentView === 'flagged' && 'Flagged Messages'}
+                </h1>
+              </div>
+              <Button variant="outline" onClick={handleLogout}>
+                Logout
+              </Button>
+            </div>
+          </div>
+        </header>
+
+        <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div className="px-4 py-6 sm:px-0">
+            {loading ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                <p className="mt-2 text-gray-600">Loading submissions...</p>
+              </div>
+            ) : submissions.length === 0 ? (
+              <Card>
+                <div className="text-center py-8">
+                  <p className="text-gray-600">No submissions found.</p>
+                </div>
+              </Card>
+            ) : (
+              <div className="space-y-4">
+                {submissions.map((submission) => (
+                  <Card key={submission.id}>
+                    <div className="p-6">
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">{submission.name}</h3>
+                          <p className="text-sm text-gray-600">{submission.email}</p>
+                          {submission.phone && (
+                            <p className="text-sm text-gray-600">{submission.phone}</p>
+                          )}
+                        </div>
+                        <div className="flex space-x-2">
+                          {!submission.is_read && (
+                            <span className="px-2 py-1 text-xs font-medium bg-orange-100 text-orange-800 rounded-full">
+                              Unread
+                            </span>
+                          )}
+                          {submission.is_flagged && (
+                            <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
+                              Flagged
+                            </span>
+                          )}
+                          <span className="text-xs text-gray-500">
+                            {new Date(submission.submission_time).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <p className="text-gray-700 whitespace-pre-wrap">{submission.message}</p>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
+        </main>
       </div>
     );
   }
@@ -146,13 +298,13 @@ export default function Dashboard({ token, onLogout }: DashboardProps) {
             <Card>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
               <div className="space-y-3">
-                <Button className="w-full" variant="outline">
+                <Button className="w-full" variant="outline" onClick={handleViewAll}>
                   View All Submissions
                 </Button>
-                <Button className="w-full" variant="outline">
+                <Button className="w-full" variant="outline" onClick={handleViewUnread}>
                   View Unread Messages
                 </Button>
-                <Button className="w-full" variant="outline">
+                <Button className="w-full" variant="outline" onClick={handleViewFlagged}>
                   View Flagged Messages
                 </Button>
               </div>

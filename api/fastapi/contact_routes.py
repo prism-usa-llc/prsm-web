@@ -76,14 +76,14 @@ def calculate_bot_score(form_data: ContactForm, request: Request, form_load_time
             score += 30
             break
     
-    # Check for repeated submissions from same IP
-    client_ip = request.client.host if request.client else "unknown"
-    recent_submissions = r.get(f"submissions:{client_ip}")
+    # Check for repeated submissions from same IP + user-agent combination
+    client_fingerprint = f"{request.client.host if request.client else 'unknown'}:{hashlib.sha256(request.headers.get('user-agent', '').encode()).hexdigest()[:16]}"
+    recent_submissions = r.get(f"rate_limit:{client_fingerprint}")
     if recent_submissions:
         try:
             count = int(recent_submissions)
-            if count > 5:  # More than 5 submissions in the time window
-                score += 40
+            if count > 2:  # More than 2 submissions in the time window (approaching limit of 3)
+                score += 30
         except ValueError:
             pass
     
@@ -100,19 +100,22 @@ async def get_form_token():
     token = generate_form_token()
     return {"token": token, "timestamp": time.time()}
 
-def check_rate_limit(client_ip: str) -> bool:
-    """Check if IP has exceeded rate limit (5 submissions per minute)"""
-    rate_limit_key = f"rate_limit:{client_ip}"
+def check_rate_limit(client_ip: str, user_agent: str) -> bool:
+    """Check if IP + user-agent combination has exceeded rate limit (3 submissions per hour)"""
+    # Create a unique identifier combining IP and user-agent
+    client_fingerprint = f"{client_ip}:{hashlib.sha256(user_agent.encode()).hexdigest()[:16]}"
+    rate_limit_key = f"rate_limit:{client_fingerprint}"
+    
     current_count = r.get(rate_limit_key)
     
-    if current_count and int(current_count) >= 5:
-        return False  # Rate limit exceeded
+    if current_count and int(current_count) >= 3:
+        return False  # Rate limit exceeded (3 submissions per hour)
     
     # Increment counter
     if current_count:
         r.incr(rate_limit_key)
     else:
-        r.setex(rate_limit_key, 60, 1)  # 1 minute window
+        r.setex(rate_limit_key, 3600, 1)  # 1 hour window (3600 seconds)
     
     return True  # Within rate limit
 
@@ -127,11 +130,11 @@ async def process_contact_submission(
     client_ip = request.client.host if request.client else "unknown"
     user_agent = request.headers.get("user-agent", "")
     
-    # Check rate limit
-    if not check_rate_limit(client_ip):
+    # Check rate limit based on IP + user-agent combination
+    if not check_rate_limit(client_ip, user_agent):
         raise HTTPException(
             status_code=429,
-            detail="Too many requests. Please try again later."
+            detail="Too many requests from this client. You can submit up to 3 messages per hour. Please try again later."
         )
     
     # Verify form token
@@ -149,14 +152,6 @@ async def process_contact_submission(
             status_code=200,
             content={"success": True, "message": "Thank you for your message!"}
         )
-    
-    # Track submission rate per IP
-    submission_key = f"submissions:{client_ip}"
-    current_count = r.get(submission_key)
-    if current_count:
-        r.incr(submission_key)
-    else:
-        r.setex(submission_key, 3600, 1)  # 1 hour window
     
     # Create submission record
     submission = ContactSubmission(

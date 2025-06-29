@@ -1,3 +1,0 @@
-[submodule "api/bible_api"]
-	path = api/bible_api
-	url = https://github.com/r4wm/bible_api

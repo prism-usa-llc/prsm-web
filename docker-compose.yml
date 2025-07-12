@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./web
+      args:
+        - NEXT_PUBLIC_WEBSITE_NAME=${NEXT_PUBLIC_WEBSITE_NAME}
+        - NEXT_PUBLIC_PHONE_NUMBER=${NEXT_PUBLIC_PHONE_NUMBER}
+        - NEXT_PUBLIC_CONTACT_EMAIL=${NEXT_PUBLIC_CONTACT_EMAIL}
+        - NEXT_PUBLIC_HOURS_SATURDAY=${NEXT_PUBLIC_HOURS_SATURDAY}
+        - NEXT_PUBLIC_HOURS_SUNDAY=${NEXT_PUBLIC_HOURS_SUNDAY}
+        - NEXT_PUBLIC_API_URL=${API_URL}
+        - NEXT_PUBLIC_NETWORK_MONITORING_COST=${NEXT_PUBLIC_NETWORK_MONITORING_COST}
+        - NEXT_PUBLIC_NETWORK_INSTALLATION_COST=${NEXT_PUBLIC_NETWORK_INSTALLATION_COST}
+        - NEXT_PUBLIC_CUSTOM_SOFTWARE_COST=${NEXT_PUBLIC_CUSTOM_SOFTWARE_COST}
+    env_file:
+      - .env
+    container_name: prism_website
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - prism_network
+
+  api:
+    build:
+      context: ./api
+      args:
+        - SMTP_HOST=${SMTP_HOST}
+        - SMTP_PORT=${SMTP_PORT}
+        - SMTP_USER=${SMTP_USER}
+        - SMTP_PASS=${SMTP_PASS}
+        - CONTACT_EMAIL=${CONTACT_EMAIL}
+        - REACT_APP_WEBSITE_NAME=${NEXT_PUBLIC_WEBSITE_NAME}
+        - REACT_APP_PHONE_NUMBER=${NEXT_PUBLIC_PHONE_NUMBER}
+    env_file:
+      - .env
+    container_name: prism_api
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    networks:
+      - prism_network
+
+networks:
+  prism_network:
+    driver: bridge

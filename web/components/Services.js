@@ -3,11 +3,25 @@ import {
   ComputerDesktopIcon, 
   QueueListIcon, 
   CodeBracketIcon,
-  WifiIcon
+  WifiIcon,
+  ExclamationTriangleIcon
 } from '@heroicons/react/24/outline'
 
 export default function Services() {
   const services = [
+    {
+      icon: ExclamationTriangleIcon,
+      title: 'Website Down or Slow Instant Alerting',
+      description: 'Never let your customers be the first to report an outage. Our monitoring service checks your website every minute and sends instant alerts if it\'s down or performing slowly.',
+      features: [
+        '24/7 automated website monitoring',
+        'Instant email and SMS alerts',
+        'Performance and uptime reports',
+        'Peace of mind for your online presence'
+      ],
+      status: 'available',
+      cost: process.env.NEXT_PUBLIC_WEBSITE_MONITORING_COST
+    },
     {
       icon: ComputerDesktopIcon,
       title: 'Scout Network Monitoring',
@@ -63,6 +77,7 @@ export default function Services() {
       cost: process.env.NEXT_PUBLIC_NETWORK_INSTALLATION_COST
     }
   ]
+
 
   return (
     <section id="services" className="section-padding bg-gray-900">

@@ -1,6 +1,20 @@
 version: '3.8'
 
 services:
+  nginx:
+    image: nginx:alpine
+    container_name: prism_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.docker.conf:/etc/nginx/nginx.conf
+    networks:
+      - prism_network
+    depends_on:
+      - web
+      - api
+
   web:
     build:
       context: ./web
@@ -11,6 +25,7 @@ services:
         - NEXT_PUBLIC_HOURS_SATURDAY=${NEXT_PUBLIC_HOURS_SATURDAY}
         - NEXT_PUBLIC_HOURS_SUNDAY=${NEXT_PUBLIC_HOURS_SUNDAY}
         - NEXT_PUBLIC_API_URL=${API_URL}
+        - NEXT_PUBLIC_WEBSITE_MONITORING_COST=${NEXT_PUBLIC_WEBSITE_MONITORING_COST}
         - NEXT_PUBLIC_NETWORK_MONITORING_COST=${NEXT_PUBLIC_NETWORK_MONITORING_COST}
         - NEXT_PUBLIC_NETWORK_INSTALLATION_COST=${NEXT_PUBLIC_NETWORK_INSTALLATION_COST}
         - NEXT_PUBLIC_CUSTOM_SOFTWARE_COST=${NEXT_PUBLIC_CUSTOM_SOFTWARE_COST}
@@ -18,8 +33,6 @@ services:
       - .env
     container_name: prism_website
     restart: unless-stopped
-    ports:
-      - "3000:3000"
     networks:
       - prism_network
 
@@ -38,8 +51,6 @@ services:
       - .env
     container_name: prism_api
     restart: unless-stopped
-    ports:
-      - "3001:3001"
     networks:
       - prism_network
 

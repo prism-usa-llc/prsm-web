@@ -39,17 +39,18 @@ services:
   api:
     build:
       context: ./api
-      args:
-        - SMTP_HOST=${SMTP_HOST}
-        - SMTP_PORT=${SMTP_PORT}
-        - SMTP_USER=${SMTP_USER}
-        - SMTP_PASS=${SMTP_PASS}
-        - CONTACT_EMAIL=${CONTACT_EMAIL}
-        - REACT_APP_WEBSITE_NAME=${NEXT_PUBLIC_WEBSITE_NAME}
-        - REACT_APP_PHONE_NUMBER=${NEXT_PUBLIC_PHONE_NUMBER}
     env_file:
       - .env
     container_name: prism_api
+    restart: unless-stopped
+    networks:
+      - prism_network
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    container_name: prism_redis
     restart: unless-stopped
     networks:
       - prism_network
